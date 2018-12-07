@@ -16,8 +16,8 @@
 
 #include <vector>
 
-#include <osquery/core/process.h>
 #include <osquery/logger.h>
+#include <osquery/process/process.h>
 #include <osquery/system.h>
 #include <osquery/utils/info/platform_type.h>
 
@@ -185,14 +185,14 @@ std::shared_ptr<PlatformProcess> PlatformProcess::launchTestPythonScript(
     osquery_path = *osquery_path_option;
   } else {
     if (!isPlatform(PlatformType::TYPE_FREEBSD)) {
-      osquery_path = "/usr/local/osquery";
+      osquery_path = "/usr/bin/env python";
     } else {
-      osquery_path = "/usr/local";
+      osquery_path = "/usr/local/bin/python";
     }
   }
 
   // The whole-string, space-delimited, python process arguments.
-  auto argv = osquery_path + "/bin/python " + args;
+  auto argv = osquery_path + " " + args;
 
   std::shared_ptr<PlatformProcess> process;
   int process_pid = ::fork();

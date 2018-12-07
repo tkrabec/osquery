@@ -10,9 +10,9 @@
 
 #include <set>
 
+#include <osquery/data_logger.h>
 #include <osquery/config/config.h>
 #include <osquery/flags.h>
-#include <osquery/logger.h>
 #include <osquery/registry_factory.h>
 #include <osquery/utils/json.h>
 

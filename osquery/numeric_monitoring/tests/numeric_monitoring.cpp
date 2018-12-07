@@ -14,9 +14,10 @@
 
 #include <osquery/database.h>
 #include <osquery/dispatcher.h>
-#include <osquery/logger.h>
+#include <osquery/flags.h>
 #include <osquery/numeric_monitoring.h>
 #include <osquery/registry_factory.h>
+#include <osquery/system.h>
 
 #include <osquery/utils/conversions/tryto.h>
 
@@ -31,6 +32,7 @@ DECLARE_bool(disable_database);
 class NumericMonitoringTests : public testing::Test {
  public:
   void SetUp() override {
+    Initializer::platformSetup();
     registryAndPluginInit();
     FLAGS_disable_database = true;
     DatabasePlugin::setAllowOpen(true);

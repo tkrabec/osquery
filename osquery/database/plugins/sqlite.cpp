@@ -15,6 +15,7 @@
 
 #include <osquery/filesystem/filesystem.h>
 #include <osquery/logger.h>
+#include <osquery/query.h>
 
 #include <osquery/database/plugins/sqlite.h>
 #include <osquery/filesystem/fileops.h>

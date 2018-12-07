@@ -8,15 +8,14 @@
  *  You may select, at your option, one of the above-listed licenses.
  */
 
-#include "osquery/tables/system/posix/shell_history.h"
-
-#include <osquery/sql.h>
+#include <fstream>
 
 #include <boost/filesystem.hpp>
 
 #include <gtest/gtest.h>
 
-#include <fstream>
+#include <osquery/sql.h>
+#include <osquery/tables/system/posix/shell_history.h>
 
 namespace fs = boost::filesystem;
 

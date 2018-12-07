@@ -1,3 +1,11 @@
+#  Copyright (c) 2014-present, Facebook, Inc.
+#  All rights reserved.
+#
+#  This source code is licensed under both the Apache 2.0 license (found in the
+#  LICENSE file in the root directory of this source tree) and the GPLv2 (found
+#  in the COPYING file in the root directory of this source tree).
+#  You may select, at your option, one of the above-listed licenses.
+
 # @generated
 
 load("//tools/build_defs/oss/osquery:cxx.bzl", "osquery_cxx_library")
@@ -14,9 +22,14 @@ osquery_tp_prebuilt_cxx_library(
         "linux-x86_64": "3a328038dc908d8912983100b675333207780f6239a10433a78e365f80e8d3bf",
         "macos-x86_64": "09ef8458657814af24d60968af57800af7f2896175a235c9b2776772be9171e9",
     },
-    static_libs = [
-        "lib/libpopt.a",
-    ],
+    platform_static_libs = {
+        "linux-x86_64": [
+            "lib/libpopt.a",
+        ],
+        "macos-x86_64": [
+            "lib/libpopt.a",
+        ],
+    },
     linker_flags = [
 
     ],
@@ -24,4 +37,5 @@ osquery_tp_prebuilt_cxx_library(
 
     ],
     version = "1.16",
+    build = "0",
 )

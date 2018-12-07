@@ -22,16 +22,17 @@
 #include <boost/thread.hpp>
 
 #include <osquery/config/config.h>
-#include <osquery/core/watcher.h>
 #include <osquery/core/sql/query_data.h>
+#include <osquery/core/watcher.h>
+#include <osquery/data_logger.h>
+#include <osquery/filesystem/fileops.h>
 #include <osquery/filesystem/filesystem.h>
 #include <osquery/logger.h>
+#include <osquery/process/process.h>
 #include <osquery/sql.h>
-#include <osquery/utils/system/time.h>
-#include <osquery/utils/info/tool_type.h>
-#include <osquery/core/process.h>
-#include <osquery/filesystem/fileops.h>
 #include <osquery/utils/conversions/tryto.h>
+#include <osquery/utils/info/tool_type.h>
+#include <osquery/utils/system/time.h>
 
 namespace fs = boost::filesystem;
 

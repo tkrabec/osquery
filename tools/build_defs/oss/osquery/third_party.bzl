@@ -1,13 +1,23 @@
 load(
+    "//tools/build_defs/oss/osquery:cxx.bzl",
+    _osquery_cxx_library = "osquery_cxx_library",
+    _osquery_prebuilt_cxx_library = "osquery_prebuilt_cxx_library",
+    _osquery_prebuilt_cxx_library_group = "osquery_prebuilt_cxx_library_group",
+)
+load(
+    "//tools/build_defs/oss/osquery:defaults.bzl",
+    _OSQUERY_THIRD_PARTY_PATH = "OSQUERY_THIRD_PARTY_PATH",
+)
+load(
     "//tools/build_defs/oss/osquery:native.bzl",
     _osquery_genrule = "osquery_genrule",
     _osquery_get_current_platform = "osquery_get_current_platform",
 )
 load(
-    "//tools/build_defs/oss/osquery:cxx.bzl",
-    _osquery_cxx_library = "osquery_cxx_library",
-    _osquery_prebuilt_cxx_library = "osquery_prebuilt_cxx_library",
-    _osquery_prebuilt_cxx_library_group = "osquery_prebuilt_cxx_library_group",
+    "//tools/build_defs/oss/osquery:platforms.bzl",
+    _LINUX = "LINUX",
+    _MACOSX = "MACOSX",
+    _WINDOWS = "WINDOWS",
 )
 load(
     "//tools/build_defs/oss/osquery:python.bzl",
@@ -19,15 +29,6 @@ load(
     _osquery_tp_prebuilt_cxx_archive = "osquery_tp_prebuilt_cxx_archive",
     _osquery_tp_prebuilt_python_archive = "osquery_tp_prebuilt_python_archive",
 )
-load(
-    "//tools/build_defs/oss/osquery:defaults.bzl",
-    _OSQUERY_THIRD_PARTY_PATH = "OSQUERY_THIRD_PARTY_PATH",
-)
-load(
-    "//tools/build_defs/oss/osquery:platforms.bzl",
-    _LINUX = "LINUX",
-    _MACOSX = "MACOSX",
-)
 
 _PLATFORM_MAP = {
     "linux-x86_64": [
@@ -35,6 +36,9 @@ _PLATFORM_MAP = {
     ],
     "macos-x86_64": [
         _MACOSX,
+    ],
+    "windows-x86_64": [
+        _WINDOWS,
     ],
 }
 
@@ -53,12 +57,24 @@ def _static_lib_file(
         static_lib,
     )
 
+    if platform == "windows-x86_64":
+        static_lib = static_lib.replace("/", "\\")
+
     _osquery_genrule(
         name = target_name,
         out = static_lib,
         cmd = (
-            "mkdir -p `dirname $OUT` " +
+            "mkdir -p \$(dirname $OUT) " +
             "&& cp $(location :{})/{}/{}/{} $OUT"
+        ).format(
+            archive_target,
+            name,
+            version,
+            static_lib,
+        ),
+        cmd_exe = (
+            "mkdir %OUT%\.. " +
+            "&& mklink %OUT% $(location :{})\{}\{}\{}"
         ).format(
             archive_target,
             name,
@@ -160,8 +176,14 @@ def _header_dir(
         name = target_name,
         out = "include",
         cmd = (
-            "mkdir -p `dirname $OUT` " +
-            "&& ln -s -f $(location :{})/{}/{}/include $OUT"
+            "ln -s -f $(location :{})/{}/{}/include $OUT"
+        ).format(
+            archive_target,
+            name,
+            version,
+        ),
+        cmd_exe = (
+            "mklink /D %OUT% $(location :{})\{}\{}\include"
         ).format(
             archive_target,
             name,
@@ -202,11 +224,13 @@ def _prebuilt_library(
 def osquery_tp_prebuilt_cxx_library(
         name,
         version,
+        build,
         platforms,
         sha256sums,
-        static_libs,
-        linker_flags = [],
-        deps = []):
+        static_libs = None,
+        platform_static_libs = None,
+        linker_flags = None,
+        deps = None):
     platform_prebuilt_library_targets = []
 
     for platform in platforms:
@@ -216,6 +240,7 @@ def osquery_tp_prebuilt_cxx_library(
             platform = platform,
             sha256sum = sha256sums[platform],
             version = version,
+            build = build,
         )
 
         header_dir_targets = [
@@ -227,10 +252,29 @@ def osquery_tp_prebuilt_cxx_library(
             ),
         ]
 
-        # Apple clang ld doesn't support --start-group so we can't use a group
+        effective_static_libs = []
+        if static_libs:
+            effective_static_libs += static_libs
+        if platform_static_libs and platform in platform_static_libs:
+            effective_static_libs += platform_static_libs[platform]
+
+        # Linux supports --start-group linker flag so use a library_group
+        # This fixes dependency problems within pre-built libraries
         static_lib_targets = []
-        if platform.startswith("macos"):
-            for static_lib in static_libs:
+        if platform.startswith("linux"):
+            static_lib_targets.append(
+                _static_lib_group(
+                    name,
+                    version,
+                    platform,
+                    archive_target,
+                    effective_static_libs,
+                    linker_flags or [],
+                    deps or [],
+                ),
+            )
+        elif effective_static_libs:
+            for static_lib in effective_static_libs:
                 static_lib_targets.append(
                     _static_lib(
                         name,
@@ -238,22 +282,10 @@ def osquery_tp_prebuilt_cxx_library(
                         platform,
                         archive_target,
                         static_lib,
-                        linker_flags,
-                        deps,
+                        linker_flags or [],
+                        deps or [],
                     ),
                 )
-        elif static_libs:
-            static_lib_targets.append(
-                _static_lib_group(
-                    name,
-                    version,
-                    platform,
-                    archive_target,
-                    static_libs,
-                    linker_flags,
-                    deps,
-                ),
-            )
 
         prebuilt_library_target = _prebuilt_library(
             name,
@@ -278,10 +310,10 @@ def osquery_tp_prebuilt_cxx_library(
 
 def osquery_tp_prebuilt_python_library(
         name,
-        platforms = [],
-        filenames = [],
-        sha1sums = [],
-        deps = []):
+        platforms,
+        filenames,
+        sha1sums,
+        deps = None):
     platform = _osquery_get_current_platform()
 
     # If specifc platform isn't available fallback to none
@@ -294,7 +326,7 @@ def osquery_tp_prebuilt_python_library(
         _osquery_python_library(
             name = name,
             visibility = ["PUBLIC"],
-            deps = deps,
+            deps = deps or [],
         )
     else:
         # Otherwise plaform is available, create archive rule and make that the
@@ -315,7 +347,7 @@ def osquery_tp_prebuilt_python_library(
             name = name,
             binary_src = binary_src,
             visibility = ["PUBLIC"],
-            deps = deps,
+            deps = deps or [],
         )
 
 def osquery_tp_target(name, lib = None):

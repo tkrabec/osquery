@@ -12,10 +12,9 @@
 
 #include <gtest/gtest.h>
 
+#include <osquery/core/sql/query_data.h>
 #include <osquery/logger.h>
-
-#include "osquery/core/conversions.h"
-#include "osquery/tests/test_util.h"
+#include <osquery/utils/status.h>
 
 namespace osquery {
 namespace tables {

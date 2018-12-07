@@ -8,94 +8,21 @@
  *  You may select, at your option, one of the above-listed licenses.
  */
 
-
-#include <osquery/sql/sqlite_util.h>
-
-#include <osquery/utils/info/platform_type.h>
-
 #include <osquery/core.h>
-#include <osquery/sql.h>
 #include <osquery/registry_interface.h>
+#include <osquery/sql.h>
+#include <osquery/sql/sqlite_util.h>
+#include <osquery/sql/tests/sql_test_utils.h>
+#include <osquery/system.h>
+#include <osquery/utils/info/platform_type.h>
 
 #include <gtest/gtest.h>
 
 namespace osquery {
-
-namespace {
-
-const std::string kTestQuery{"SELECT * FROM test_table"};
-
-QueryData getTestDBExpectedResults() {
-  QueryData d;
-  Row row1;
-  row1["username"] = "mike";
-  row1["age"] = "23";
-  d.push_back(row1);
-  Row row2;
-  row2["username"] = "matt";
-  row2["age"] = "24";
-  d.push_back(row2);
-  return d;
-}
-
-std::vector<std::pair<std::string, QueryData>> getTestDBResultStream() {
-  std::vector<std::pair<std::string, QueryData>> results;
-
-  std::string q2 =
-      R"(INSERT INTO test_table (username, age) VALUES ("joe", 25))";
-  QueryData d2;
-  Row row2_1;
-  row2_1["username"] = "mike";
-  row2_1["age"] = "23";
-  d2.push_back(row2_1);
-  Row row2_2;
-  row2_2["username"] = "matt";
-  row2_2["age"] = "24";
-  d2.push_back(row2_2);
-  Row row2_3;
-  row2_3["username"] = "joe";
-  row2_3["age"] = "25";
-  d2.push_back(row2_3);
-  results.push_back(std::make_pair(q2, d2));
-
-  std::string q3 = R"(UPDATE test_table SET age = 27 WHERE username = "matt")";
-  QueryData d3;
-  Row row3_1;
-  row3_1["username"] = "mike";
-  row3_1["age"] = "23";
-  d3.push_back(row3_1);
-  Row row3_2;
-  row3_2["username"] = "matt";
-  row3_2["age"] = "27";
-  d3.push_back(row3_2);
-  Row row3_3;
-  row3_3["username"] = "joe";
-  row3_3["age"] = "25";
-  d3.push_back(row3_3);
-  results.push_back(std::make_pair(q3, d3));
-
-  std::string q4 =
-      R"(DELETE FROM test_table WHERE username = "matt" AND age = 27)";
-  QueryData d4;
-  Row row4_1;
-  row4_1["username"] = "mike";
-  row4_1["age"] = "23";
-  d4.push_back(row4_1);
-  Row row4_2;
-  row4_2["username"] = "joe";
-  row4_2["age"] = "25";
-  d4.push_back(row4_2);
-  results.push_back(std::make_pair(q4, d4));
-
-  return results;
-}
-
-
-}
-
 class SQLiteUtilTests : public testing::Test {
  public:
   void SetUp() override {
+    Initializer::platformSetup();
     registryAndPluginInit();
   }
 };
@@ -359,4 +286,4 @@ TEST_F(SQLiteUtilTests, test_query_planner) {
   getQueryColumnsInternal(query, columns, dbc);
   EXPECT_EQ(getTypes(columns), TypeList({BLOB_TYPE}));
 }
-}
+} // namespace osquery

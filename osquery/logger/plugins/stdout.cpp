@@ -11,8 +11,9 @@
 #include "stdout.h"
 
 #include <iostream>
-#include <glog/logging.h>
+
 #include <osquery/flags.h>
+#include <osquery/logger.h>
 
 namespace osquery {
 

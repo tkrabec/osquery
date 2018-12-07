@@ -1,17 +1,9 @@
-<file:../base.bcfg>
-
 [cxx]
-  default_platform=linux-x86_64
-
-  cpp = /usr/bin/clang-7
-  cc = /usr/bin/clang-7
-  cxxpp = /usr/bin/clang++-7
-  cxx = /usr/bin/clang++-7
-  ld = /usr/bin/clang++-7
-  as = /usr/bin/as
-  ar = /usr/bin/ar
+  default_platform = linux-x86_64
 
 [cxx_base]
+  cppflags =
+
   cflags = \
     -std=gnu11 \
     -Qunused-arguments \
@@ -51,8 +43,7 @@
     -pedantic \
     -g
 
-  cppflags = \
-    -std=gnu11
+  cxxppflags =
 
   cxxflags = \
     -std=gnu++14 \
@@ -93,9 +84,6 @@
     -pipe \
     -pedantic \
     -g
-
-  cxxppflags = \
-    -std=gnu++14
 
   ldflags = \
     -stdlib=libc++

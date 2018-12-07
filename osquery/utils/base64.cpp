@@ -14,7 +14,8 @@
 #include <boost/archive/iterators/base64_from_binary.hpp>
 #include <boost/archive/iterators/binary_from_base64.hpp>
 #include <boost/archive/iterators/transform_width.hpp>
-#include <glog/logging.h>
+
+#include <osquery/logger.h>
 
 namespace bai = boost::archive::iterators;
 

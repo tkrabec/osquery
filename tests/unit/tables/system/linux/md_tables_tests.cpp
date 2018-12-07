@@ -16,7 +16,7 @@
 
 #include <utility>
 
-#include "osquery/tables/system/linux/md_tables.h"
+#include <osquery/tables/system/linux/md_tables.h>
 
 using namespace testing;
 

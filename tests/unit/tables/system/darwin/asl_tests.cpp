@@ -16,17 +16,20 @@
 
 #include <gtest/gtest.h>
 
-#include <osquery/filesystem/filesystem.h>
+#include <osquery/registry_factory.h>
 #include <osquery/sql.h>
-
-#include "osquery/core/conversions.h"
-#include "osquery/tables/system/darwin/asl_utils.h"
-#include "osquery/tests/test_util.h"
+#include <osquery/tables/system/darwin/asl_utils.h>
+#include <osquery/utils/conversions/tryto.h>
 
 namespace osquery {
 namespace tables {
 
-class AslTests : public testing::Test {};
+class AslTests : public testing::Test {
+ protected:
+  void SetUp() override {
+    registryAndPluginInit();
+  }
+};
 
 // macOS ASL is deprecated in 10.12
 _Pragma("clang diagnostic push");

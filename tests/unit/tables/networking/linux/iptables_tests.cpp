@@ -10,38 +10,45 @@
 
 #include <gtest/gtest.h>
 
-#include <osquery/logger.h>
-
 #include <arpa/inet.h>
-#include <libiptc/libiptc.h>
-
-#include "osquery/tests/test_util.h"
-
+#include <osquery/core/sql/row.h>
+#include <osquery/logger.h>
+extern "C" {
+#include <osquery/tables/networking/linux/iptc_proxy.h>
+}
 namespace osquery {
 namespace tables {
 
-void parseIpEntry(const ipt_ip *ip, Row &row);
+void parseIptcpRule(const iptcproxy_rule& rule, Row& r);
 
-ipt_ip* getIpEntryContent() {
-  static ipt_ip ip_entry;
+iptcproxy_rule getIpEntryContent() {
+  static iptcproxy_rule ip_rule;
 
-  ip_entry.proto = 6;
-  memset(ip_entry.iniface, 0, IFNAMSIZ);
-  strcpy(ip_entry.outiface, "eth0");
-  inet_aton("123.123.123.123", &ip_entry.src);
-  inet_aton("45.45.45.45", &ip_entry.dst);
-  inet_aton("250.251.252.253", &ip_entry.smsk);
-  inet_aton("253.252.251.250", &ip_entry.dmsk);
-  memset(ip_entry.iniface_mask, 0xfe, IFNAMSIZ);
-  memset(ip_entry.outiface_mask, 0xfa, IFNAMSIZ);
-  ip_entry.iniface_mask[IFNAMSIZ-1] = 0x00;
-  ip_entry.outiface_mask[IFNAMSIZ-1] = 0x00;
-  return &ip_entry;
+  ip_rule.target = nullptr;
+  ip_rule.match = false;
+  ip_rule.match_data.valid = false;
+
+  ip_rule.ip_data.proto = 6;
+  memset(ip_rule.ip_data.iniface, 0, IFNAMSIZ);
+  strcpy(ip_rule.ip_data.outiface, "eth0");
+  inet_aton("123.123.123.123", &ip_rule.ip_data.src);
+  inet_aton("45.45.45.45", &ip_rule.ip_data.dst);
+  inet_aton("250.251.252.253", &ip_rule.ip_data.smsk);
+  inet_aton("253.252.251.250", &ip_rule.ip_data.dmsk);
+  memset(ip_rule.ip_data.iniface_mask, 0xfe, IFNAMSIZ);
+  memset(ip_rule.ip_data.outiface_mask, 0xfa, IFNAMSIZ);
+  ip_rule.ip_data.iniface_mask[IFNAMSIZ - 1] = 0x00;
+  ip_rule.ip_data.outiface_mask[IFNAMSIZ - 1] = 0x00;
+  return ip_rule;
 }
 
 Row getIpEntryExpectedResults() {
   Row row;
 
+  row["target"] = "";
+  row["match"] = "no";
+  row["dst_port"] = "";
+  row["src_port"] = "";
   row["protocol"] = "6";
   row["iniface"] = "all";
   row["outiface"] = "eth0";
@@ -59,7 +66,7 @@ class IptablesTests : public testing::Test {};
 
 TEST_F(IptablesTests, test_iptables_ip_entry) {
   Row row;
-  parseIpEntry(getIpEntryContent(), row);
+  parseIptcpRule(getIpEntryContent(), row);
   EXPECT_EQ(row, getIpEntryExpectedResults());
 }
 } // namespace tables

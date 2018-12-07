@@ -11,8 +11,9 @@
 #include "filesystem_logger.h"
 
 #include <exception>
-#include <glog/logging.h>
+
 #include <osquery/flags.h>
+#include <osquery/logger.h>
 #include <osquery/utils/config/default_paths.h>
 
 namespace fs = boost::filesystem;

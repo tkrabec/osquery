@@ -17,6 +17,7 @@
 #include <osquery/core.h>
 #include <osquery/utils/mutex.h>
 #include <osquery/utils/system/system.h>
+#include <osquery/utils/info/tool_type.h>
 
 namespace osquery {
 

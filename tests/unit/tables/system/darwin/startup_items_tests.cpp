@@ -10,10 +10,10 @@
 
 #include <gtest/gtest.h>
 
+#include <osquery/config/tests/test_utils.h>
+#include <osquery/core/sql/query_data.h>
 #include <osquery/filesystem/filesystem.h>
 #include <osquery/logger.h>
-
-#include "osquery/tests/test_util.h"
 
 namespace fs = boost::filesystem;
 
@@ -25,7 +25,7 @@ void genLoginItems(const fs::path& sipath, QueryData& results);
 class StartupItemsTests : public testing::Test {};
 
 TEST_F(StartupItemsTests, test_parse_startup_items) {
-  auto si_path = kTestDataPath + "test_startup_items.plist";
+  auto si_path = getTestConfigDirectory() / "test_startup_items.plist";
 
   // Parse the contents into a launchd table row.
   QueryData results;

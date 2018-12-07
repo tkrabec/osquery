@@ -15,6 +15,7 @@
 #include <osquery/logger.h>
 #include <osquery/registry.h>
 #include <osquery/sql.h>
+#include <osquery/system.h>
 
 #include <osquery/sql/virtual_table.h>
 
@@ -25,6 +26,7 @@ DECLARE_bool(disable_database);
 class VirtualTableTests : public testing::Test {
  public:
   void SetUp() override {
+    Initializer::platformSetup();
     registryAndPluginInit();
     FLAGS_disable_database = true;
     DatabasePlugin::setAllowOpen(true);

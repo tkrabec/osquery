@@ -16,8 +16,6 @@
 #include <osquery/logger.h>
 #include <osquery/system.h>
 
-#include "osquery/tests/test_util.h"
-
 namespace osquery {
 
 class UsersTests : public testing::Test {};

@@ -15,11 +15,10 @@
 #include <osquery/enroll.h>
 #include <osquery/filesystem/filesystem.h>
 #include <osquery/flags.h>
+#include <osquery/process/process.h>
 #include <osquery/registry_factory.h>
 #include <osquery/sql.h>
 #include <osquery/utils/system/time.h>
-
-#include "osquery/core/process.h"
 
 namespace osquery {
 

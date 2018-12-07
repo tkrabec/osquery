@@ -20,6 +20,7 @@
 #include <osquery/config/config.h>
 #include <osquery/events/linux/process_file_events.h>
 #include <osquery/filesystem/filesystem.h>
+#include <osquery/flags.h>
 #include <osquery/logger.h>
 #include <osquery/registry_factory.h>
 #include <osquery/tables/events/linux/process_file_events.h>

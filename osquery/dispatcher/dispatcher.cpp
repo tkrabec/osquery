@@ -11,8 +11,7 @@
 #include <osquery/dispatcher.h>
 #include <osquery/flags.h>
 #include <osquery/logger.h>
-
-#include <osquery/core/process.h>
+#include <osquery/process/process.h>
 
 namespace osquery {
 

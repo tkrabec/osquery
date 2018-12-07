@@ -28,7 +28,7 @@
 #include <osquery/utils/system/time.h>
 #include <osquery/utils/conversions/tryto.h>
 
-#include <osquery/core/process.h>
+#include <osquery/process/process.h>
 #include <osquery/tests/test_util.h>
 #include <osquery/utils/info/platform_type.h>
 
@@ -133,82 +133,6 @@ ScheduledQuery getOsqueryScheduledQuery() {
   sq.query = "SELECT filename FROM fs WHERE path = '/bin' ORDER BY filename";
   sq.interval = 5;
   return sq;
-}
-
-std::string getCACertificateContent() {
-  std::string content;
-  readFile(fs::path(kTestDataPath) / "test_cert.pem", content);
-  return content;
-}
-
-std::string getEtcHostsContent() {
-  std::string content;
-  readFile(fs::path(kTestDataPath) / "test_hosts.txt", content);
-  return content;
-}
-
-std::string getEtcHostsIcsContent() {
-  std::string content;
-  readFile(fs::path(kTestDataPath) / "test_hosts_ics.txt", content);
-  return content;
-}
-
-std::string getEtcProtocolsContent() {
-  std::string content;
-  readFile(fs::path(kTestDataPath) / "test_protocols.txt", content);
-  return content;
-}
-
-QueryData getEtcHostsExpectedResults() {
-  Row row1;
-  Row row2;
-  Row row3;
-  Row row4;
-  Row row5;
-  Row row6;
-
-  row1["address"] = "127.0.0.1";
-  row1["hostnames"] = "localhost";
-  row2["address"] = "255.255.255.255";
-  row2["hostnames"] = "broadcasthost";
-  row3["address"] = "::1";
-  row3["hostnames"] = "localhost";
-  row4["address"] = "fe80::1%lo0";
-  row4["hostnames"] = "localhost";
-  row5["address"] = "127.0.0.1";
-  row5["hostnames"] = "example.com example";
-  row6["address"] = "127.0.0.1";
-  row6["hostnames"] = "example.net";
-  return {row1, row2, row3, row4, row5, row6};
-}
-
-QueryData getEtcHostsIcsExpectedResults() {
-  Row row1;
-
-  row1["address"] = "192.168.11.81";
-  row1["hostnames"] = "VM-q27rkc8son.mshome.net";
-  return {row1};
-}
-
-QueryData getEtcProtocolsExpectedResults() {
-  Row row1;
-  Row row2;
-  Row row3;
-
-  row1["name"] = "ip";
-  row1["number"] = "0";
-  row1["alias"] = "IP";
-  row1["comment"] = "internet protocol, pseudo protocol number";
-  row2["name"] = "icmp";
-  row2["number"] = "1";
-  row2["alias"] = "ICMP";
-  row2["comment"] = "internet control message protocol";
-  row3["name"] = "tcp";
-  row3["number"] = "6";
-  row3["alias"] = "TCP";
-  row3["comment"] = "transmission control protocol";
-
-  return {row1, row2, row3};
 }
 
 QueryData genRows(EventSubscriberPlugin* sub) {

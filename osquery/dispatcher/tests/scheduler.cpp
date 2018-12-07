@@ -28,6 +28,7 @@ DECLARE_uint64(schedule_reload);
 
 class SchedulerTests : public testing::Test {
   void SetUp() override {
+    Initializer::platformSetup();
     registryAndPluginInit();
     FLAGS_disable_database = true;
     DatabasePlugin::setAllowOpen(true);

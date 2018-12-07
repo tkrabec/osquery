@@ -12,7 +12,7 @@
 
 #include <osquery/config/config.h>
 #include <osquery/events/linux/syslog.h>
-#include <osquery/logger.h>
+#include <osquery/flags.h>
 #include <osquery/registry_factory.h>
 #include <osquery/tables.h>
 #include <osquery/tables/events/event_utils.h>

@@ -8,67 +8,77 @@
  *  You may select, at your option, one of the above-listed licenses.
  */
 
-#include <gtest/gtest.h>
+#include <osquery/logger/plugins/filesystem_logger.h>
+
+#include <osquery/filesystem/filesystem.h>
+#include <osquery/utils/conversions/split.h>
+#include <osquery/utils/info/platform_type.h>
+
+#include <osquery/data_logger.h>
+#include <osquery/database.h>
+#include <osquery/registry_factory.h>
+#include <osquery/system.h>
 
 #include <boost/filesystem/operations.hpp>
 
-#include <osquery/logger.h>
-#include <osquery/registry_factory.h>
+#include <gtest/gtest.h>
 
-#include "osquery/core/conversions.h"
-#include "osquery/tests/test_util.h"
+#include <memory>
+#include <string>
+#include <vector>
 
 namespace fs = boost::filesystem;
 
 namespace osquery {
 
+DECLARE_bool(disable_database);
 DECLARE_string(logger_path);
 DECLARE_bool(disable_logging);
 
 class FilesystemLoggerTests : public testing::Test {
  public:
   void SetUp() override {
-    auto logger_path = fs::path(kTestWorkingDirectory) / "unittests.logs";
+    Initializer::platformSetup();
+    registryAndPluginInit();
+    FLAGS_disable_database = true;
+    DatabasePlugin::setAllowOpen(true);
+    DatabasePlugin::initPlugin();
+
+    auto logger_path = fs::temp_directory_path() /
+        fs::unique_path("osquery.filesystem_logger_tests.%%%%.%%%%.logs");
+
     FLAGS_logger_path = logger_path.string();
     fs::create_directories(FLAGS_logger_path);
 
     // Set the expected results path.
     results_path_ = (logger_path / "osqueryd.results.log").string();
 
-    // Backup the logging status, then disable.
-    logging_status_ = FLAGS_disable_logging;
     FLAGS_disable_logging = false;
+
+    EXPECT_TRUE(Registry::get().exists("logger", "filesystem"));
+
+    // This will attempt to log a string (an empty string).
+    EXPECT_TRUE(Registry::get().setActive("logger", "filesystem"));
+    EXPECT_TRUE(Registry::get().plugin("logger", "filesystem")->setUp());
+
+    ASSERT_TRUE(fs::exists(results_path_));
+
+    // Make sure the content is empty.
+    std::string content;
+    EXPECT_TRUE(readFile(results_path_, content));
+    EXPECT_EQ(content, "");
   }
 
   void TearDown() override {
-    FLAGS_disable_logging = logging_status_;
   }
 
   std::string getContent() {
     return std::string();
   }
 
- protected:
-  /// Save the status of logging before running tests, restore afterward.
-  bool logging_status_{true};
-
   /// Results log path.
   std::string results_path_;
 };
-
-TEST_F(FilesystemLoggerTests, test_filesystem_init) {
-  EXPECT_TRUE(Registry::get().exists("logger", "filesystem"));
-
-  // This will attempt to log a string (an empty string).
-  EXPECT_TRUE(Registry::get().setActive("logger", "filesystem"));
-  EXPECT_TRUE(Registry::get().plugin("logger", "filesystem")->setUp());
-  ASSERT_TRUE(fs::exists(results_path_));
-
-  // Make sure the content is empty.
-  std::string content;
-  EXPECT_TRUE(readFile(results_path_, content));
-  EXPECT_EQ(content, "");
-}
 
 TEST_F(FilesystemLoggerTests, test_log_string) {
   EXPECT_TRUE(logString("{\"json\": true}", "event"));

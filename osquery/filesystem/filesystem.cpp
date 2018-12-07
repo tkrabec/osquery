@@ -25,9 +25,11 @@
 #include <boost/property_tree/json_parser.hpp>
 
 #include <osquery/filesystem/filesystem.h>
+#include <osquery/flags.h>
 #include <osquery/logger.h>
 #include <osquery/sql.h>
 #include <osquery/system.h>
+#include <osquery/utils/system/system.h>
 
 #include <osquery/utils/json.h>
 

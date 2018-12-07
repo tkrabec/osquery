@@ -17,6 +17,7 @@
 #include <osquery/flags.h>
 #include <osquery/packs.h>
 #include <osquery/registry.h>
+#include <osquery/system.h>
 
 #include <osquery/filesystem/filesystem.h>
 
@@ -38,6 +39,7 @@ extern size_t getMachineShard(const std::string& hostname = "",
 class PacksTests : public testing::Test {
  public:
   PacksTests() {
+    Initializer::platformSetup();
     registryAndPluginInit();
     FLAGS_disable_database = true;
     DatabasePlugin::setAllowOpen(true);

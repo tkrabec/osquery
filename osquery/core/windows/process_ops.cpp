@@ -8,8 +8,10 @@
  *  You may select, at your option, one of the above-listed licenses.
  */
 
-#include <osquery/core/windows/process_ops.h>
+#include <osquery/process/windows/process_ops.h>
+#include <osquery/utils/conversions/split.h>
 #include <osquery/utils/conversions/tryto.h>
+#include <osquery/utils/conversions/windows/strings.h>
 
 namespace osquery {
 

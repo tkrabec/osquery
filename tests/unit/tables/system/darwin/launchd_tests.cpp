@@ -10,10 +10,11 @@
 
 #include <gtest/gtest.h>
 
+#include <osquery/config/tests/test_utils.h>
+#include <osquery/core/sql/query_data.h>
 #include <osquery/filesystem/filesystem.h>
 #include <osquery/logger.h>
-
-#include "osquery/tests/test_util.h"
+#include <osquery/utils/darwin/plist.h>
 
 namespace fs = boost::filesystem;
 namespace pt = boost::property_tree;
@@ -31,7 +32,7 @@ class LaunchdTests : public testing::Test {};
 TEST_F(LaunchdTests, test_parse_launchd_item) {
   // Read the contents of our testing launchd plist.
   pt::ptree tree;
-  auto launchd_path = kTestDataPath + "test_launchd.plist";
+  auto launchd_path = getTestConfigDirectory() / "test_launchd.plist";
   auto status = osquery::parsePlist(launchd_path, tree);
   ASSERT_TRUE(status.ok());
 
@@ -41,7 +42,7 @@ TEST_F(LaunchdTests, test_parse_launchd_item) {
   ASSERT_EQ(results.size(), 1U);
 
   Row expected = {
-      {"path", kTestDataPath + "test_launchd.plist"},
+      {"path", (getTestConfigDirectory() / "test_launchd.plist").string()},
       {"name", "test_launchd.plist"},
       {"label", "com.apple.mDNSResponder"},
       {"run_at_load", ""},

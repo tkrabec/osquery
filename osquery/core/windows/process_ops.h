@@ -10,9 +10,7 @@
 
 #pragma once
 
-#define _WIN32_DCOM
-
-#include <Windows.h>
+#include <osquery/utils/system/system.h>
 // clang-format off
 #include <LM.h>
 // clang-format on
@@ -21,9 +19,7 @@
 
 #include <osquery/system.h>
 #include <osquery/logger.h>
-
-#include "osquery/core/process.h"
-#include "osquery/core/windows/wmi.h"
+#include <osquery/process/process.h>
 
 namespace osquery {
 

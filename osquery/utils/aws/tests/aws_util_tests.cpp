@@ -12,11 +12,12 @@
 
 #include <gtest/gtest.h>
 
-#include <osquery/core/process.h>
-#include <osquery/logger.h>
+#include <osquery/flags.h>
+#include <osquery/process/process.h>
 
-#include "osquery/tests/test_util.h"
-#include "osquery/utils/aws_util.h"
+#include <osquery/config/tests/test_utils.h>
+#include <osquery/utils/aws/aws_util.h>
+#include <osquery/utils/info/platform_type.h>
 
 namespace osquery {
 
@@ -45,8 +46,8 @@ class AwsUtilTests : public testing::Test {
 
 TEST_F(AwsUtilTests, test_get_credentials) {
   // Set a good path for the credentials file
-  std::string profile_path = kTestDataPath + "/aws/credentials";
-  setEnvVar(kAwsProfileFileEnvVar, profile_path.c_str());
+  auto const profile_path = getTestConfigDirectory() / "/aws/credentials";
+  setEnvVar(kAwsProfileFileEnvVar, profile_path.string());
 
   // Clear any values for the other AWS env vars
   unsetEnvVar(kAwsAccessKeyEnvVar);
@@ -153,8 +154,8 @@ TEST_F(AwsUtilTests, test_get_region) {
   FLAGS_aws_profile_name = "";
 
   // Test no credential file, should default to us-east-1
-  std::string profile_path = kTestDataPath + "credentials";
-  setEnvVar(kAwsProfileFileEnvVar, profile_path.c_str());
+  auto profile_path = getTestConfigDirectory() / "credentials";
+  setEnvVar(kAwsProfileFileEnvVar, profile_path.string());
   ASSERT_EQ(Status(0), getAWSRegion(region));
   ASSERT_EQ(std::string(Aws::Region::US_EAST_1), region);
 
@@ -163,14 +164,14 @@ TEST_F(AwsUtilTests, test_get_region) {
   if (!isPlatform(PlatformType::TYPE_WINDOWS)) {
     // Set an invalid path for the credentials file with a profile name
     // provided,
-    profile_path = kTestDataPath + "credentials";
-    setEnvVar(kAwsProfileFileEnvVar, profile_path.c_str());
+    profile_path = getTestConfigDirectory() / "credentials";
+    setEnvVar(kAwsProfileFileEnvVar, profile_path.string());
     FLAGS_aws_profile_name = "test";
     ASSERT_FALSE(getAWSRegion(region).ok());
 
     // Set a valid path for the credentials file with profile name.
-    profile_path = kTestDataPath + "aws/credentials";
-    setEnvVar(kAwsProfileFileEnvVar, profile_path.c_str());
+    profile_path = getTestConfigDirectory() / "aws/credentials";
+    setEnvVar(kAwsProfileFileEnvVar, profile_path.string());
     FLAGS_aws_profile_name = "test";
     ASSERT_EQ(Status(0), getAWSRegion(region));
     ASSERT_EQ(std::string(Aws::Region::EU_CENTRAL_1), region);

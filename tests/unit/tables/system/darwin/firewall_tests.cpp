@@ -10,11 +10,11 @@
 
 #include <gtest/gtest.h>
 
+#include <osquery/config/tests/test_utils.h>
 #include <osquery/filesystem/filesystem.h>
 #include <osquery/logger.h>
-
-#include "osquery/tables/system/darwin/firewall.h"
-#include "osquery/tests/test_util.h"
+#include <osquery/tables/system/darwin/firewall.h>
+#include <osquery/utils/darwin/plist.h>
 
 namespace pt = boost::property_tree;
 
@@ -23,7 +23,7 @@ namespace tables {
 
 pt::ptree getALFTree() {
   std::string content;
-  readFile(kTestDataPath + "test_alf.plist", content);
+  readFile(getTestConfigDirectory() / "test_alf.plist", content);
 
   pt::ptree tree;
   parsePlistContent(content, tree);

@@ -13,132 +13,13 @@
 #include <osquery/core/sql/diff_results.h>
 #include <osquery/core/sql/query_data.h>
 #include <osquery/query.h>
+#include <osquery/sql/tests/sql_test_utils.h>
 
 #include <gtest/gtest.h>
 
 #include <string>
 
 namespace osquery {
-
-namespace {
-
-ColumnNames getSerializedRowColumnNames(bool unordered_and_repeated) {
-  ColumnNames cn;
-  if (unordered_and_repeated) {
-    cn.push_back("repeated_column");
-  }
-  cn.push_back("alphabetical");
-  cn.push_back("foo");
-  cn.push_back("meaning_of_life");
-  cn.push_back("repeated_column");
-  return cn;
-}
-
-std::pair<JSON, Row> getSerializedRow(bool unordered_and_repeated = false) {
-  auto cns = getSerializedRowColumnNames(unordered_and_repeated);
-
-  Row r;
-  auto doc = JSON::newObject();
-  for (const auto& cn : cns) {
-    auto c_value = cn + "_value";
-    r[cn] = c_value;
-    doc.addCopy(cn, c_value);
-  }
-  return std::make_pair(std::move(doc), r);
-}
-
-std::pair<JSON, QueryData> getSerializedQueryData() {
-  auto r = getSerializedRow(false);
-  QueryData q = {r.second, r.second};
-
-  JSON doc = JSON::newArray();
-  auto arr1 = doc.getArray();
-  doc.copyFrom(r.first.doc(), arr1);
-  doc.push(arr1);
-
-  auto arr2 = doc.getArray();
-  doc.copyFrom(r.first.doc(), arr2);
-  doc.push(arr2);
-
-  return std::make_pair(std::move(doc), q);
-}
-
-std::pair<std::string, QueryData> getSerializedQueryDataJSON() {
-  auto results = getSerializedQueryData();
-  std::string output;
-  results.first.toString(output);
-  return std::make_pair(output, results.second);
-}
-
-std::pair<JSON, DiffResults> getSerializedDiffResults() {
-  auto qd = getSerializedQueryData();
-  DiffResults diff_results;
-  diff_results.added = qd.second;
-  diff_results.removed = qd.second;
-
-  JSON doc = JSON::newObject();
-  doc.add("removed", qd.first.doc());
-  doc.add("added", qd.first.doc());
-
-  return std::make_pair(std::move(doc), std::move(diff_results));
-}
-
-std::pair<JSON, QueryLogItem> getSerializedQueryLogItem() {
-  std::pair<JSON, QueryLogItem> p;
-  QueryLogItem i;
-  JSON doc = JSON::newObject();
-  auto dr = getSerializedDiffResults();
-  i.results = std::move(dr.second);
-  i.name = "foobar";
-  i.calendar_time = "Mon Aug 25 12:10:57 2014";
-  i.time = 1408993857;
-  i.identifier = "foobaz";
-  i.epoch = 0L;
-  i.counter = 0L;
-
-  auto diff_doc = doc.getObject();
-  diff_doc.Swap(dr.first.doc());
-  doc.add("diffResults", diff_doc);
-  doc.addRef("name", "foobar");
-  doc.addRef("hostIdentifier", "foobaz");
-  doc.addRef("calendarTime", "Mon Aug 25 12:10:57 2014");
-  doc.add("unixTime", 1408993857);
-  doc.add("epoch", std::size_t{0});
-  doc.add("counter", std::size_t{0});
-
-  return std::make_pair(std::move(doc), std::move(i));
-}
-
-std::pair<JSON, QueryData> getSerializedQueryDataWithColumnOrder() {
-  auto r = getSerializedRow(true);
-  QueryData q = {r.second, r.second};
-  JSON doc = JSON::newArray();
-  auto arr1 = doc.getArray();
-  doc.copyFrom(r.first.doc(), arr1);
-  doc.push(arr1);
-
-  auto arr2 = doc.getArray();
-  doc.copyFrom(r.first.doc(), arr2);
-  doc.push(arr2);
-
-  return std::make_pair(std::move(doc), q);
-}
-
-std::pair<std::string, DiffResults> getSerializedDiffResultsJSON() {
-  auto results = getSerializedDiffResults();
-  std::string output;
-  results.first.toString(output);
-  return std::make_pair(output, std::move(results.second));
-}
-
-std::pair<std::string, QueryLogItem> getSerializedQueryLogItemJSON() {
-  auto results = getSerializedQueryLogItem();
-  std::string output;
-  results.first.toString(output);
-  return std::make_pair(output, std::move(results.second));
-}
-
-} // namespace
 
 class ResultsTests : public testing::Test {};
 

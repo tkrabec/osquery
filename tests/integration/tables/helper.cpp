@@ -12,6 +12,7 @@
 
 #include <osquery/database.h>
 #include <osquery/registry.h>
+#include <osquery/system.h>
 
 #include <osquery/utils/conversions/tryto.h>
 
@@ -263,6 +264,7 @@ bool validate_value_using_flags(const std::string& value,
 }
 
 void setUpEnvironment() {
+  Initializer::platformSetup();
   registryAndPluginInit();
   FLAGS_disable_database = true;
   DatabasePlugin::setAllowOpen(true);

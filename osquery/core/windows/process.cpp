@@ -16,7 +16,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 
-#include "osquery/core/process.h"
+#include <osquery/process/process.h>
 
 namespace fs = boost::filesystem;
 

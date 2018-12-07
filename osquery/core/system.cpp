@@ -52,6 +52,7 @@
 #include <osquery/filesystem/filesystem.h>
 #include <osquery/flags.h>
 #include <osquery/logger.h>
+#include <osquery/process/process.h>
 #include <osquery/sql.h>
 #include <osquery/system.h>
 
@@ -62,7 +63,9 @@
 #include "osquery/utils/info/platform_type.h"
 #include "osquery/utils/conversions/tryto.h"
 #include "osquery/utils/config/default_paths.h"
-#include "osquery/core/process.h"
+#ifdef WIN32
+#include <osquery/utils/conversions/windows/strings.h>
+#endif
 
 namespace fs = boost::filesystem;
 
@@ -102,6 +105,18 @@ const std::vector<std::string> kPlaceholderHardwareUUIDList{
     "03020100-0504-0706-0809-0a0b0c0d0e0f",
     "10000000-0000-8000-0040-000000000000",
 };
+
+#ifdef WIN32
+struct tm* gmtime_r(time_t* t, struct tm* result) {
+  _gmtime64_s(result, t);
+  return result;
+}
+
+struct tm* localtime_r(time_t* t, struct tm* result) {
+  _localtime64_s(result, t);
+  return result;
+}
+#endif
 
 std::string getHostname() {
   long max_path = 256;

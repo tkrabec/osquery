@@ -10,15 +10,15 @@
 
 #pragma once
 
-#include "buffered.h"
+#include "osquery/logger/plugins/buffered.h"
 
 #include <chrono>
 #include <memory>
 #include <vector>
-#include <glog/logging.h>
 
 #include <osquery/core.h>
 #include <osquery/dispatcher.h>
+#include <osquery/logger.h>
 #include <osquery/plugins/logger.h>
 
 #include <osquery/utils/aws/aws_util.h>

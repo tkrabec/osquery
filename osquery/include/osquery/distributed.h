@@ -275,10 +275,8 @@ class Distributed {
   // ID of the currently executing query
   static std::string currentRequestId_;
 
-/*
  private:
   friend class DistributedTests;
-  FRIEND_TEST(DistributedTests, test_workflow);
-*/
+  FRIEND_TEST(DistributedTests, DISABLED_test_workflow);
 };
 }

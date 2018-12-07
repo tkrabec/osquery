@@ -10,11 +10,11 @@
 
 #include <gtest/gtest.h>
 
+#include <osquery/config/tests/test_utils.h>
 #include <osquery/filesystem/filesystem.h>
 #include <osquery/logger.h>
 #include <osquery/tables.h>
-
-#include "osquery/tests/test_util.h"
+#include <osquery/utils/darwin/plist.h>
 
 namespace fs = boost::filesystem;
 namespace pt = boost::property_tree;
@@ -29,7 +29,7 @@ void genApplicationsFromPath(const fs::path& path, std::set<std::string>& apps);
 
 pt::ptree getInfoPlistTree() {
   std::string content;
-  readFile(kTestDataPath + "test_info.plist", content);
+  readFile(getTestConfigDirectory() / "test_info.plist", content);
 
   pt::ptree tree;
   parsePlistContent(content, tree);

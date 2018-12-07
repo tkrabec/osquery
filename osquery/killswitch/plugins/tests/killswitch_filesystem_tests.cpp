@@ -10,9 +10,10 @@
 
 #include <gtest/gtest.h>
 
+#include <osquery/config/tests/test_utils.h>
 #include <osquery/flags.h>
 #include <osquery/registry.h>
-#include <osquery/config/tests/test_utils.h>
+#include <osquery/system.h>
 
 #include "osquery/killswitch/plugins/killswitch_filesystem.h"
 
@@ -23,6 +24,7 @@ DECLARE_uint32(killswitch_refresh_rate);
 class KillswitchFilesystemTests : public testing::Test {
 public:
   void SetUp() override {
+    Initializer::platformSetup();
     registryAndPluginInit();
   }
 };

@@ -1,3 +1,11 @@
+#  Copyright (c) 2014-present, Facebook, Inc.
+#  All rights reserved.
+#
+#  This source code is licensed under both the Apache 2.0 license (found in the
+#  LICENSE file in the root directory of this source tree) and the GPLv2 (found
+#  in the COPYING file in the root directory of this source tree).
+#  You may select, at your option, one of the above-listed licenses.
+
 load("//tools/build_defs/oss/osquery:native.bzl", "osquery_filegroup", "osquery_target")
 load("//tools/build_defs/oss/osquery:python.bzl", "osquery_python_binary", "osquery_python_library")
 load("//tools/build_defs/oss/osquery:third_party.bzl", "osquery_tp_target")
@@ -70,5 +78,23 @@ osquery_python_binary(
     deps = [
         osquery_target("tools/tests:utils"),
         ":lib_amalgamate",
+    ],
+)
+
+osquery_python_library(
+    name = "lib_substitute",
+    srcs = [
+        "substitute.py",
+    ],
+    base_module = "osquery.tools.codegen",
+)
+
+osquery_python_binary(
+    name = "substitute",
+    main_module = "osquery.tools.codegen.substitute",
+    platform = "py3",
+    visibility = ["PUBLIC"],
+    deps = [
+        ":lib_substitute",
     ],
 )

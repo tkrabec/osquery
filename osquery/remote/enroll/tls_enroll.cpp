@@ -8,6 +8,12 @@
  *  You may select, at your option, one of the above-listed licenses.
  */
 
+// clang-format off
+// Keep it on top of all other includes to fix double include WinSock.h header file
+// which is windows specific boost build problem
+#include <osquery/remote/transports/tls.h>
+// clang-format on
+
 #include "tls_enroll.h"
 
 #include <osquery/enroll.h>
@@ -17,10 +23,9 @@
 #include <osquery/sql.h>
 #include <osquery/system.h>
 
+#include <osquery/process/process.h>
 #include <osquery/remote/requests.h>
 #include <osquery/remote/serializers/json.h>
-#include <osquery/remote/transports/tls.h>
-#include <osquery/core/process.h>
 #include <osquery/utils/info/platform_type.h>
 
 namespace osquery {

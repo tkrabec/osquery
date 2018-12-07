@@ -1,3 +1,11 @@
+#  Copyright (c) 2014-present, Facebook, Inc.
+#  All rights reserved.
+#
+#  This source code is licensed under both the Apache 2.0 license (found in the
+#  LICENSE file in the root directory of this source tree) and the GPLv2 (found
+#  in the COPYING file in the root directory of this source tree).
+#  You may select, at your option, one of the above-listed licenses.
+
 load("//tools/build_defs/oss/osquery:codegen.bzl", "osquery_gentable_cxx_library")
 load("//tools/build_defs/oss/osquery:native.bzl", "osquery_filegroup", "osquery_target")
 
@@ -397,6 +405,10 @@ osquery_gentable_cxx_library(
             "linux,windows",
         ),
         (
+            _SPECS_LOCATION + "/lldpd/lldp_neighbors.table",
+            "linux,macos,freebsd",
+        ),
+        (
             _SPECS_LOCATION + "/kernel_info.table",
             "linux,macos,windows",
         ),
@@ -633,8 +645,20 @@ osquery_gentable_cxx_library(
             "linux,macos,freebsd",
         ),
         (
+            _SPECS_LOCATION + "/sleuthkit/device_file.table",
+            "linux,macos,freebsd",
+        ),
+        (
+            _SPECS_LOCATION + "/sleuthkit/device_hash.table",
+            "linux,macos,freebsd",
+        ),
+        (
+            _SPECS_LOCATION + "/sleuthkit/device_partitions.table",
+            "linux,macos,freebsd",
+        ),
+        (
             _SPECS_LOCATION + "/smart/smart_drive_info.table",
-            "linux,macos,windows",
+            "linux,macos",
         ),
         (
             _SPECS_LOCATION + "/user_groups.table",
@@ -762,7 +786,11 @@ osquery_gentable_cxx_library(
         ),
         (
             _SPECS_LOCATION + "/yara/yara_events.table",
-            "linux,macos,windows",
+            "linux,macos",
+        ),
+        (
+            _SPECS_LOCATION + "/yara/yara.table",
+            "linux,macos,freebsd",
         ),
     ],
     spec_files = [
@@ -780,7 +808,6 @@ osquery_gentable_cxx_library(
         _SPECS_LOCATION + "/interface_addresses.table",
         _SPECS_LOCATION + "/interface_details.table",
         _SPECS_LOCATION + "/listening_ports.table",
-        _SPECS_LOCATION + "/lldpd/lldp_neighbors.table",
         _SPECS_LOCATION + "/logged_in_users.table",
         _SPECS_LOCATION + "/os_version.table",
         _SPECS_LOCATION + "/platform_info.table",
@@ -789,9 +816,6 @@ osquery_gentable_cxx_library(
         _SPECS_LOCATION + "/processes.table",
         _SPECS_LOCATION + "/python_packages.table",
         _SPECS_LOCATION + "/routes.table",
-        _SPECS_LOCATION + "/sleuthkit/device_file.table",
-        _SPECS_LOCATION + "/sleuthkit/device_hash.table",
-        _SPECS_LOCATION + "/sleuthkit/device_partitions.table",
         _SPECS_LOCATION + "/system_info.table",
         _SPECS_LOCATION + "/uptime.table",
         _SPECS_LOCATION + "/users.table",
@@ -804,7 +828,6 @@ osquery_gentable_cxx_library(
         _SPECS_LOCATION + "/utility/osquery_registry.table",
         _SPECS_LOCATION + "/utility/osquery_schedule.table",
         _SPECS_LOCATION + "/utility/time.table",
-        _SPECS_LOCATION + "/yara/yara.table",
     ],
     visibility = ["PUBLIC"],
     deps = [

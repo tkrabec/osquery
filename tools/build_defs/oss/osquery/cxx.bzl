@@ -10,13 +10,15 @@ load(
     _LABELS = "OSQUERY_LABELS",
 )
 
-_PREPROCESSOR_FLAGS = [
+# for osquery targets only
+_OSQUERY_PREPROCESSOR_FLAGS = [
     "-DOSQUERY_VERSION=3.3.0",
     "-DOSQUERY_BUILD_VERSION=3.3.0",
     "-DOSQUERY_BUILD_SDK_VERSION=3.3.0",
 ]
 
-_PLATFORM_PREPROCESSOR_FLAGS = [
+# for osquery targets only
+_OSQUERY_PLATFORM_PREPROCESSOR_FLAGS = [
     (
         _LINUX,
         [
@@ -55,6 +57,7 @@ _PLATFORM_PREPROCESSOR_FLAGS = [
     (
         _WINDOWS,
         [
+            "-DWIN32=1",
             "-DWINDOWS=1",
             "-DOSQUERY_WINDOWS=1",
             "-DOSQUERY_BUILD_PLATFORM=windows",
@@ -63,21 +66,33 @@ _PLATFORM_PREPROCESSOR_FLAGS = [
     ),
 ]
 
+# for all targets in osquery build, including third party
+_GLOBAL_PLATFORM_PREPROCESSOR_FLAGS = [
+    (
+        _WINDOWS,
+        [
+            "/D_WIN32_WINNT=0x0601",  # win7, see osquery/utils/system/windows/system.h
+        ],
+    ),
+]
+
 def _osquery_set_generic_kwargs(kwargs):
     kwargs.setdefault("labels", [])
     kwargs["labels"] += _LABELS
 
-def _osquery_set_preprocessor_kwargs(kwargs):
+def _osquery_set_preprocessor_kwargs(kwargs, external):
     kwargs.setdefault("preprocessor_flags", [])
-    kwargs["preprocessor_flags"] += _PREPROCESSOR_FLAGS
+    if not external:
+        kwargs["preprocessor_flags"] += _OSQUERY_PREPROCESSOR_FLAGS
 
     kwargs.setdefault("platform_preprocessor_flags", [])
-    kwargs["platform_preprocessor_flags"] += _PLATFORM_PREPROCESSOR_FLAGS
+    kwargs["platform_preprocessor_flags"] += _GLOBAL_PLATFORM_PREPROCESSOR_FLAGS
+    if not external:
+        kwargs["platform_preprocessor_flags"] += _OSQUERY_PLATFORM_PREPROCESSOR_FLAGS
 
 def osquery_cxx_library(external = False, **kwargs):
     _osquery_set_generic_kwargs(kwargs)
-    if not external:
-        _osquery_set_preprocessor_kwargs(kwargs)
+    _osquery_set_preprocessor_kwargs(kwargs, external)
     native.cxx_library(**kwargs)
 
 def osquery_prebuilt_cxx_library(**kwargs):
@@ -92,11 +107,11 @@ def osquery_prebuilt_cxx_library_group(**kwargs):
 def osquery_cxx_binary(external = False, **kwargs):
     _ignore = [external]
     _osquery_set_generic_kwargs(kwargs)
-    _osquery_set_preprocessor_kwargs(kwargs)
+    _osquery_set_preprocessor_kwargs(kwargs, external)
     native.cxx_binary(**kwargs)
 
 def osquery_cxx_test(external = False, **kwargs):
     _ignore = [external]
     _osquery_set_generic_kwargs(kwargs)
-    _osquery_set_preprocessor_kwargs(kwargs)
+    _osquery_set_preprocessor_kwargs(kwargs, external)
     native.cxx_test(**kwargs)

@@ -1,6 +1,7 @@
 library(
     name = "yara",
     version = "3.7.1",
+    build = 0,
     platforms = [
         "linux-x86_64",
         "macos-x86_64",

@@ -13,8 +13,9 @@
 #import <Foundation/Foundation.h>
 #include <boost/filesystem/path.hpp>
 #include <boost/property_tree/json_parser.hpp>
-#include <glog/logging.h>
 #include <sstream>
+
+#include <osquery/logger.h>
 
 #include <osquery/utils/conversions/darwin/cfstring.h>
 #include <osquery/utils/base64.h>

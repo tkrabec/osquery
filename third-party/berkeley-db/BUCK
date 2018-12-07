@@ -1,3 +1,11 @@
+#  Copyright (c) 2014-present, Facebook, Inc.
+#  All rights reserved.
+#
+#  This source code is licensed under both the Apache 2.0 license (found in the
+#  LICENSE file in the root directory of this source tree) and the GPLv2 (found
+#  in the COPYING file in the root directory of this source tree).
+#  You may select, at your option, one of the above-listed licenses.
+
 # @generated
 
 load("//tools/build_defs/oss/osquery:cxx.bzl", "osquery_cxx_library")
@@ -20,12 +28,12 @@ osquery_tp_prebuilt_cxx_library(
     sha256sums = {
         "linux-x86_64": "793ab1515833c680ef3054f6a16781fa766699395ffbb6810635d36f2e8f6cb0",
     },
-    static_libs = [
-        "lib/libdb-5.3.a",
-        "lib/libdb.a",
-        "lib/libdb_cxx-5.3.a",
-        "lib/libdb_cxx.a",
-    ],
+    platform_static_libs = {
+        "linux-x86_64": [
+            "lib/libdb.a",
+            "lib/libdb_cxx.a",
+        ],
+    },
     linker_flags = [
 
     ],
@@ -33,4 +41,5 @@ osquery_tp_prebuilt_cxx_library(
 
     ],
     version = "5.3.28",
+    build = "0",
 )

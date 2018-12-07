@@ -14,14 +14,9 @@
 
 #include <osquery/utils/only_movable.h>
 #include <osquery/utils/status.h>
+#include <osquery/utils/system/system.h>
 
 #ifdef WIN32
-
-// Undef GetObject to avoid collision with windows GetObject
-#ifdef GetObject
-#undef GetObject
-#endif
-
 #pragma warning(push, 3)
 #pragma warning(disable : 4715)
 #endif

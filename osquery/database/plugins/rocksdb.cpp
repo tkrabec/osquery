@@ -15,6 +15,7 @@
 #include <rocksdb/options.h>
 
 #include <osquery/filesystem/filesystem.h>
+#include <osquery/flags.h>
 #include <osquery/logger.h>
 #include <osquery/registry_factory.h>
 
@@ -81,7 +82,6 @@ Status RocksDBDatabasePlugin::setUp() {
 
   if (!initialized_) {
     initialized_ = true;
-    options_.OptimizeForSmallDb();
 
     // Set meta-data (mostly) handling options.
     options_.create_if_missing = true;

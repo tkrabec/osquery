@@ -8,16 +8,16 @@
  *  You may select, at your option, one of the above-listed licenses.
  */
 
+#ifdef WIN32
+#define _USE_MATH_DEFINES
+#endif
+// Include cmath here to ensure it is included after the define.
+#include <cmath>
+
 #include <osquery/utils/system/errno.h>
 
 #include <assert.h>
 #include <errno.h>
-
-#ifdef WIN32
-#define _USE_MATH_DEFINES
-#endif
-
-#include <cmath>
 
 #include <string.h>
 

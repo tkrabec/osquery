@@ -8,6 +8,12 @@
  *  You may select, at your option, one of the above-listed licenses.
  */
 
+// clang-format off
+// Keep it on top of all other includes to fix double include WinSock.h header file
+// which is windows specific boost build problem
+#include <osquery/remote/utility.h>
+// clang-format on
+
 #include "tls_logger.h"
 
 #include <boost/property_tree/ptree.hpp>
@@ -17,7 +23,6 @@
 #include <osquery/registry.h>
 
 #include <osquery/remote/serializers/json.h>
-#include <osquery/remote/utility.h>
 
 #include <osquery/config/parsers/decorators.h>
 #include <osquery/utils/json.h>

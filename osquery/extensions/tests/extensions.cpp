@@ -23,10 +23,10 @@
 
 #include <osquery/utils/info/platform_type.h>
 
-#include <osquery/core/process.h>
+#include <osquery/database.h>
 #include <osquery/extensions/interface.h>
 #include <osquery/filesystem/fileops.h>
-#include <osquery/database.h>
+#include <osquery/process/process.h>
 
 #include <boost/filesystem.hpp>
 
@@ -42,6 +42,7 @@ const int kTimeout = 3000;
 class ExtensionsTest : public testing::Test {
  protected:
   void SetUp() override {
+    Initializer::platformSetup();
     registryAndPluginInit();
     FLAGS_disable_database = true;
     DatabasePlugin::setAllowOpen(true);

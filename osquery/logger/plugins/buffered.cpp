@@ -17,16 +17,15 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 
-#include <glog/logging.h>
-
+#include <osquery/config/parsers/decorators.h>
 #include <osquery/database.h>
 #include <osquery/flags.h>
+#include <osquery/logger.h>
 #include <osquery/registry.h>
 #include <osquery/system.h>
 #include <osquery/utils/info/version.h>
 #include <osquery/utils/json.h>
 #include <osquery/utils/system/time.h>
-#include <osquery/config/parsers/decorators.h>
 
 namespace pt = boost::property_tree;
 

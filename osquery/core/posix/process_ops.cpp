@@ -22,8 +22,7 @@
 #include <boost/optional.hpp>
 
 #include <osquery/flags.h>
-
-#include "osquery/core/process.h"
+#include <osquery/process/process.h>
 
 namespace osquery {
 

@@ -11,8 +11,8 @@
 #include <CoreFoundation/CoreFoundation.h>
 #include <Foundation/Foundation.h>
 #include <gtest/gtest.h>
-
-#include "osquery/tests/test_util.h"
+#include <osquery/config/tests/test_utils.h>
+#include <osquery/core/sql/query_data.h>
 
 namespace osquery {
 namespace tables {
@@ -22,7 +22,7 @@ void parseNetworks(const CFDictionaryRef& network, QueryData& results);
 class WifiNetworksTest : public testing::Test {};
 
 TEST_F(WifiNetworksTest, test_parse_wifi_networks) {
-  std::string path = kTestDataPath + "test_airport.plist";
+  std::string path = (getTestConfigDirectory() / "test_airport.plist").string();
 
   auto plist = (__bridge CFDictionaryRef)
       [NSDictionary dictionaryWithContentsOfFile:@(path.c_str())];
@@ -83,7 +83,8 @@ TEST_F(WifiNetworksTest, test_parse_wifi_networks) {
 }
 
 TEST_F(WifiNetworksTest, test_parse_legacy_wifi_networks) {
-  std::string path = kTestDataPath + "test_airport_legacy.plist";
+  std::string path =
+      (getTestConfigDirectory() / "test_airport_legacy.plist").string();
 
   auto plist = (__bridge CFDictionaryRef)
       [NSDictionary dictionaryWithContentsOfFile:@(path.c_str())];

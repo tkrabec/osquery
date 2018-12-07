@@ -8,15 +8,14 @@
  *  You may select, at your option, one of the above-listed licenses.
  */
 
-#ifdef __linux__
-
 #include <map>
 #include <set>
 #include <string>
 
 #include <gtest/gtest.h>
 
-#include "osquery/tables/events/linux/selinux_events.h"
+#include <osquery/events/linux/selinux_events.h>
+#include <osquery/tables/events/linux/selinux_events.h>
 
 namespace osquery {
 class SELinuxEventsTests : public testing::Test {};
@@ -30,5 +29,3 @@ TEST_F(SELinuxEventsTests, record_type_labels) {
   }
 }
 } // namespace osquery
-
-#endif

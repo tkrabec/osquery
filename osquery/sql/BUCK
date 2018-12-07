@@ -1,7 +1,15 @@
-load("//tools/build_defs/oss/osquery:cxx.bzl", "osquery_cxx_library", "osquery_cxx_test")
+#  Copyright (c) 2014-present, Facebook, Inc.
+#  All rights reserved.
+#
+#  This source code is licensed under both the Apache 2.0 license (found in the
+#  LICENSE file in the root directory of this source tree) and the GPLv2 (found
+#  in the COPYING file in the root directory of this source tree).
+#  You may select, at your option, one of the above-listed licenses.
+
+load("//tools/build_defs/oss/osquery:cxx.bzl", "osquery_cxx_library")
 load("//tools/build_defs/oss/osquery:native.bzl", "osquery_target")
-load("//tools/build_defs/oss/osquery:third_party.bzl", "osquery_tp_target")
 load("//tools/build_defs/oss/osquery:platforms.bzl", "FREEBSD", "LINUX", "MACOSX", "WINDOWS")
+load("//tools/build_defs/oss/osquery:third_party.bzl", "osquery_tp_target")
 
 osquery_cxx_library(
     name = "sql",
@@ -53,9 +61,9 @@ osquery_cxx_library(
         ),
     ],
     tests = [
-        ":tests_sql",
-        ":tests_sqlite_util",
-        ":tests_virtual_table",
+        osquery_target("osquery/sql/tests:sql_tests"),
+        osquery_target("osquery/sql/tests:virtual_table_tests"),
+        osquery_target("osquery/sql/tests:sqlite_util_tests"),
     ],
     visibility = ["PUBLIC"],
     deps = [
@@ -63,70 +71,13 @@ osquery_cxx_library(
         osquery_target("osquery/core:core"),
         osquery_target("osquery/core/plugins:plugins"),
         osquery_target("osquery/hashing:hashing"),
+        osquery_target("osquery/process:process"),
         osquery_target("osquery/utils:utils"),
         osquery_target("osquery/utils/system:errno"),
         osquery_tp_target("boost"),
         osquery_tp_target("gflags"),
-        osquery_tp_target("gtest"),
+        osquery_tp_target("googletest", "gtest"),
         osquery_tp_target("sqlite"),
         osquery_tp_target("ssdeep-cpp"),
-    ],
-)
-
-osquery_cxx_test(
-    name = "tests_sql",
-    srcs = [
-        "tests/sql.cpp",
-    ],
-    visibility = ["PUBLIC"],
-    deps = [
-        osquery_target("osquery/config/plugins:tls_config"),
-        osquery_target("osquery/database:database"),
-        osquery_target("osquery/distributed:distributed"),
-        osquery_target("osquery/events:events"),
-        osquery_target("osquery/extensions:extensions"),
-        osquery_target("osquery/registry:registry"),
-        osquery_target("osquery/remote/enroll:tls_enroll"),
-        osquery_target("specs:tables"),
-        ":sql",
-    ],
-)
-
-osquery_cxx_test(
-    name = "tests_sqlite_util",
-    srcs = [
-        "tests/sqlite_util.cpp",
-    ],
-    visibility = ["PUBLIC"],
-    deps = [
-        osquery_target("osquery/config/plugins:tls_config"),
-        osquery_target("osquery/database:database"),
-        osquery_target("osquery/distributed:distributed"),
-        osquery_target("osquery/events:events"),
-        osquery_target("osquery/extensions:extensions"),
-        osquery_target("osquery/registry:registry"),
-        osquery_target("osquery/remote/enroll:tls_enroll"),
-        osquery_target("specs:tables"),
-        ":sql",
-    ],
-)
-
-osquery_cxx_test(
-    name = "tests_virtual_table",
-    srcs = [
-        "tests/virtual_table.cpp",
-    ],
-    visibility = ["PUBLIC"],
-    deps = [
-        osquery_target("osquery/config/plugins:tls_config"),
-        osquery_target("osquery/database:database"),
-        osquery_target("osquery/database/plugins:ephemeral"),
-        osquery_target("osquery/distributed:distributed"),
-        osquery_target("osquery/events:events"),
-        osquery_target("osquery/extensions:extensions"),
-        osquery_target("osquery/registry:registry"),
-        osquery_target("osquery/remote/enroll:tls_enroll"),
-        osquery_target("specs:tables"),
-        ":sql",
     ],
 )

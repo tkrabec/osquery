@@ -9,6 +9,12 @@
  *  You may select, at your option, one of the above-listed licenses.
  */
 
+// clang-format off
+// Keep it on top of all other includes to fix double include WinSock.h header file
+// which is windows specific boost build problem
+#include <osquery/remote/transports/tls.h>
+// clang-format on
+
 #include <unistd.h>
 
 #include <boost/algorithm/string/find.hpp>
@@ -22,7 +28,6 @@
 
 #include <osquery/config/parsers/kafka_topics.h>
 #include <osquery/logger/plugins/kafka_producer.h>
-#include <osquery/remote/transports/tls.h>
 
 namespace osquery {
 

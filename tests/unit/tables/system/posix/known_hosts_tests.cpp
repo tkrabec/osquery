@@ -13,9 +13,8 @@
 #include <boost/filesystem.hpp>
 #include <gtest/gtest.h>
 
+#include <osquery/tables/system/posix/known_hosts.h>
 #include <osquery/utils/scope_guard.h>
-
-#include "osquery/tables/system/posix/known_hosts.h"
 
 namespace osquery {
 namespace tables {

@@ -8,9 +8,7 @@
  *  You may select, at your option, one of the above-listed licenses.
  */
 
-#define _WIN32_DCOM
-
-#include <Windows.h>
+#include <osquery/utils/system/system.h>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/regex.hpp>
@@ -21,7 +19,7 @@
 #include <osquery/sql.h>
 #include <osquery/tables.h>
 
-#include "osquery/core/conversions.h"
+#include <osquery/utils/conversions/tryto.h>
 #include "osquery/core/windows/wmi.h"
 #include "osquery/filesystem/fileops.h"
 #include "osquery/tables/system/windows/registry.h"

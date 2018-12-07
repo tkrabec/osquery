@@ -1,6 +1,7 @@
 library(
     name = "libudev",
     version = "173",
+    build = 0,
     platforms = [
         "linux-x86_64",
     ],

@@ -15,8 +15,8 @@
 #include <osquery/flags.h>
 #include <osquery/logger.h>
 #include <osquery/registry_factory.h>
-#include <osquery/utils/system/uptime.h>
 #include <osquery/tables/events/linux/selinux_events.h>
+#include <osquery/utils/system/uptime.h>
 
 namespace osquery {
 FLAG(bool,

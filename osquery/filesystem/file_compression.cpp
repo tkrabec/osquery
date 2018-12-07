@@ -8,11 +8,7 @@
  *  You may select, at your option, one of the above-listed licenses.
  */
 
-#ifdef WIN32
-#define _WIN32_DCOM
-
-#include <Windows.h>
-#endif
+#include <osquery/utils/system/system.h>
 
 // This define is required for Windows static linking of libarchive
 #define LIBARCHIVE_STATIC

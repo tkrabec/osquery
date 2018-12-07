@@ -14,9 +14,10 @@
 
 #include <boost/filesystem.hpp>
 
+#include <osquery/config/tests/test_utils.h>
+#include <osquery/core/sql/query_data.h>
 #include <osquery/filesystem/filesystem.h>
 #include <osquery/logger.h>
-#include "osquery/tests/test_util.h"
 
 namespace osquery {
 namespace tables {
@@ -90,7 +91,8 @@ class ExtendedAttributesTests : public testing::Test {
 
   virtual void TearDown() { removexattrs(kTestFilePath); }
 
-  const std::string kTestFilePath = kTestDataPath + "test_xattrs.txt";
+  const std::string kTestFilePath =
+      (getTestConfigDirectory() / "test_xattrs.txt").string();
   const std::string kTestFileDir =
       boost::filesystem::path(kTestFilePath).parent_path().string();
 };

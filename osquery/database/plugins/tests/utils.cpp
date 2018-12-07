@@ -14,6 +14,7 @@
 #include <osquery/flags.h>
 #include <osquery/registry.h>
 #include <osquery/registry_factory.h>
+#include <osquery/system.h>
 
 #include <osquery/utils/json.h>
 
@@ -39,6 +40,7 @@ class EphemeralDatabasePluginTests : public DatabasePluginTests {
 CREATE_DATABASE_TESTS(EphemeralDatabasePluginTests);
 
 void DatabasePluginTests::SetUp() {
+  Initializer::platformSetup();
   registryAndPluginInit();
   FLAGS_disable_database = true;
   DatabasePlugin::setAllowOpen(true);

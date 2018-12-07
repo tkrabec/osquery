@@ -1,20 +1,10 @@
-<file:../base.bcfg>
-
-[log]
-  compress_traces = true
-
 [cxx]
   default_platform=freebsd-x86_64
 
-  cpp = /usr/bin/clang
-  cc = /usr/bin/clang
-  cxxpp = /usr/bin/clang++
-  cxx = /usr/bin/clang++
-  ld = /usr/bin/clang++
-  as = /usr/local/bin/as
-  ar = /usr/local/bin/ar
-
 [cxx_base]
+  cppflags = \
+    -I /usr/local/include/libxml2
+
   cflags = \
     -std=gnu11 \
     -Wall \
@@ -47,10 +37,7 @@
     -pedantic \
     -g
 
-  cppflags = \
-    -std=gnu11 \
-    -I /usr/include \
-    -I /usr/local/include \
+  cxxppflags = \
     -I /usr/local/include/libxml2
 
   cxxflags = \
@@ -84,15 +71,7 @@
     -pedantic \
     -g
 
-  cxxppflags = \
-    -std=gnu++14 \
-    -I /usr/include \
-    -I /usr/local/include \
-    -I /usr/local/include/libxml2
-
   ldflags = \
-    -L /usr/local/lib \
-    -L /usr/lib \
     -lboost_system \
     -lboost_filesystem \
     -lboost_thread \

@@ -8,11 +8,11 @@
  *  You may select, at your option, one of the above-listed licenses.
  */
 
-#ifdef WIN32
-#define _WIN32_DCOM
-
-#include <Windows.h>
-#endif
+// clang-format off
+// Keep it on top of all other includes to fix double include WinSock.h header file
+// which is windows specific boost build problem
+#include <osquery/remote/utility.h>
+// clang-format on
 
 #include <boost/algorithm/string.hpp>
 
@@ -24,10 +24,11 @@
 #include <osquery/hashing/hashing.h>
 #include <osquery/logger.h>
 #include <osquery/remote/serializers/json.h>
-#include <osquery/remote/utility.h>
 #include <osquery/system.h>
 #include <osquery/utils/base64.h>
 #include <osquery/utils/json.h>
+
+#include <osquery/utils/system/system.h>
 #include <osquery/utils/system/time.h>
 
 namespace fs = boost::filesystem;

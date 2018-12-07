@@ -8,6 +8,12 @@
  *  You may select, at your option, one of the above-listed licenses.
  */
 
+// clang-format off
+// Keep it on top of all other includes to fix double include WinSock.h header file
+// which is windows specific boost build problem
+#include "osquery/remote/transports/tls.h"
+// clang-format on
+
 #include <gtest/gtest.h>
 
 #include <vector>
@@ -16,18 +22,20 @@
 #include <osquery/database.h>
 #include <osquery/flags.h>
 #include <osquery/sql.h>
+#include <osquery/system.h>
+#include <osquery/registry_factory.h>
 
 #include "osquery/remote/requests.h"
 #include "osquery/remote/serializers/json.h"
-#include "osquery/remote/transports/tls.h"
-#include "osquery/tests/test_additional_util.h"
+#include <osquery/remote/tests/test_utils.h>
 #include "osquery/tests/test_util.h"
 
-#include "osquery/remote/enroll/plugins/tls_enroll.h"
+#include <osquery/remote/enroll/tls_enroll.h>
 
 namespace osquery {
 
 DECLARE_string(tls_hostname);
+DECLARE_bool(disable_database);
 
 class TLSEnrollTests : public testing::Test {
  protected:
@@ -41,6 +49,12 @@ class TLSEnrollTests : public testing::Test {
 };
 
 void TLSEnrollTests::SetUp() {
+  Initializer::platformSetup();
+  registryAndPluginInit();
+  FLAGS_disable_database = true;
+  DatabasePlugin::setAllowOpen(true);
+  DatabasePlugin::initPlugin();
+
   // Start a server.
   TLSServerRunner::start();
   TLSServerRunner::setClientConfig();

@@ -14,9 +14,8 @@
 
 #include <gtest/gtest.h>
 
-#include <osquery/core.h>
+#include <osquery/process/process.h>
 
-#include "osquery/core/process.h"
 #include "osquery/tests/test_util.h"
 
 namespace osquery {

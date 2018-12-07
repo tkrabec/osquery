@@ -10,8 +10,9 @@
 
 #pragma once
 
-#include <string>
 #include <map>
+#include <string>
+#include <vector>
 
 #include <osquery/utils/status.h>
 #include <osquery/utils/json.h>

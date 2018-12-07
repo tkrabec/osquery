@@ -17,7 +17,7 @@
 #ifdef WIN32
 #include <iomanip>
 #include <map>
-#include <windows.h>
+#include <osquery/utils/system/system.h>
 #else
 #include <unistd.h>
 #endif

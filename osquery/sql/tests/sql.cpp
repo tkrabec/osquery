@@ -14,6 +14,8 @@
 #include <osquery/core.h>
 #include <osquery/registry.h>
 #include <osquery/sql.h>
+#include <osquery/sql/tests/sql_test_utils.h>
+#include <osquery/system.h>
 #include <osquery/tables.h>
 
 namespace osquery {
@@ -23,6 +25,7 @@ extern void escapeNonPrintableBytesEx(std::string& data);
 class SQLTests : public testing::Test {
  public:
   void SetUp() override {
+    Initializer::platformSetup();
     registryAndPluginInit();
   }
 };

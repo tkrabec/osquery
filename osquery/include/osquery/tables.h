@@ -17,14 +17,6 @@
 #include <utility>
 #include <vector>
 
-#ifdef WIN32
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif
-#endif
-
-#include <gtest/gtest_prod.h>
-
 #include <boost/core/ignore_unused.hpp>
 #include <boost/coroutine2/coroutine.hpp>
 #include <boost/optional.hpp>

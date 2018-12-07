@@ -1,12 +1,21 @@
+#  Copyright (c) 2014-present, Facebook, Inc.
+#  All rights reserved.
+#
+#  This source code is licensed under both the Apache 2.0 license (found in the
+#  LICENSE file in the root directory of this source tree) and the GPLv2 (found
+#  in the COPYING file in the root directory of this source tree).
+#  You may select, at your option, one of the above-listed licenses.
+
 load("//tools/build_defs/oss/osquery:cxx.bzl", "osquery_cxx_library")
 load("//tools/build_defs/oss/osquery:native.bzl", "osquery_target")
+load("//tools/build_defs/oss/osquery:platforms.bzl", "FREEBSD", "LINUX", "MACOSX", "POSIX", "WINDOWS")
 load("//tools/build_defs/oss/osquery:third_party.bzl", "osquery_tp_target")
-load("//tools/build_defs/oss/osquery:platforms.bzl", "FREEBSD")
 
 common_deps = [
     osquery_tp_target("glog"),
     osquery_tp_target("gflags"),
     osquery_target("osquery/core:core"),
+    osquery_target("osquery/logger:logger"),
     osquery_target("osquery/registry:registry"),
     osquery_target("osquery/core/plugins:plugins"),
     osquery_target("osquery/database:database"),
@@ -57,9 +66,15 @@ osquery_cxx_library(
         ),
     ],
     link_whole = True,
+    tests = [
+        osquery_target("osquery/logger/plugins/tests:aws_kinesis_logger_tests"),
+    ],
     visibility = ["PUBLIC"],
     deps = [
+        osquery_target("osquery:headers"),
         osquery_target("osquery/dispatcher:dispatcher"),
+        osquery_target("osquery/process:process"),
+        osquery_target("osquery/registry:registry"),
         ":aws_log_forwarder",
     ],
 )
@@ -106,6 +121,9 @@ osquery_cxx_library(
         ),
     ],
     link_whole = True,
+    tests = [
+        osquery_target("osquery/logger/plugins/tests:buffered_logger_tests"),
+    ],
     visibility = ["PUBLIC"],
     deps = common_deps + [
         osquery_target("osquery/utils/json:json"),
@@ -134,6 +152,9 @@ osquery_cxx_library(
         ),
     ],
     link_whole = True,
+    tests = [
+        osquery_target("osquery/logger/plugins/tests:filesystem_logger_tests"),
+    ],
     visibility = ["PUBLIC"],
     deps = common_deps + [
         osquery_target("osquery/utils/config:config"),
@@ -143,23 +164,39 @@ osquery_cxx_library(
 
 osquery_cxx_library(
     name = "kafka_producer",
-    srcs = [
-        "kafka_producer.cpp",
-    ],
     header_namespace = "osquery/logger/plugins",
-    exported_headers = [
-        "kafka_producer.h",
-    ],
-    exported_post_platform_linker_flags = [
+    exported_platform_headers = [
         (
-            FREEBSD,
+            LINUX,
             [
-                "-lgflags",
-                "-lglog",
+                "kafka_producer.h",
+            ],
+        ),
+        (
+            MACOSX,
+            [
+                "kafka_producer.h",
             ],
         ),
     ],
     link_whole = True,
+    platform_srcs = [
+        (
+            LINUX,
+            [
+                "kafka_producer.cpp",
+            ],
+        ),
+        (
+            MACOSX,
+            [
+                "kafka_producer.cpp",
+            ],
+        ),
+    ],
+    tests = [
+        osquery_target("osquery/logger/plugins/tests:kafka_producer_logger_tests"),
+    ],
     visibility = ["PUBLIC"],
     deps = common_deps + [
         osquery_target("osquery/dispatcher:dispatcher"),
@@ -193,12 +230,14 @@ osquery_cxx_library(
 
 osquery_cxx_library(
     name = "syslog",
-    srcs = [
-        "syslog_logger.cpp",
-    ],
     header_namespace = "osquery/logger/plugins",
-    exported_headers = [
-        "syslog_logger.h",
+    exported_platform_headers = [
+        (
+            POSIX,
+            [
+                "syslog_logger.h",
+            ],
+        ),
     ],
     exported_post_platform_linker_flags = [
         (
@@ -210,6 +249,17 @@ osquery_cxx_library(
         ),
     ],
     link_whole = True,
+    platform_srcs = [
+        (
+            POSIX,
+            [
+                "syslog_logger.cpp",
+            ],
+        ),
+    ],
+    tests = [
+        osquery_target("osquery/logger/plugins/tests:syslog_logger_tests"),
+    ],
     visibility = ["PUBLIC"],
     deps = common_deps,
 )
@@ -233,6 +283,9 @@ osquery_cxx_library(
         ),
     ],
     link_whole = True,
+    tests = [
+        osquery_target("osquery/logger/plugins/tests:tls_logger_tests"),
+    ],
     visibility = ["PUBLIC"],
     deps = common_deps + [
         ":buffered",
@@ -245,13 +298,15 @@ osquery_cxx_library(
 
 osquery_cxx_library(
     name = "windows_event_log",
-    srcs = [
-        "windows_event_log.cpp",
-    ],
     header_namespace = "osquery/logger/plugins",
-    exported_headers = [
-        "generated_wel.h",
-        "windows_event_log.h",
+    exported_platform_headers = [
+        (
+            WINDOWS,
+            [
+                "generated_wel.h",
+                "windows_event_log.h",
+            ],
+        ),
     ],
     exported_post_platform_linker_flags = [
         (
@@ -263,6 +318,14 @@ osquery_cxx_library(
         ),
     ],
     link_whole = True,
+    platform_srcs = [
+        (
+            WINDOWS,
+            [
+                "windows_event_log.cpp",
+            ],
+        ),
+    ],
     visibility = ["PUBLIC"],
     deps = common_deps,
 )

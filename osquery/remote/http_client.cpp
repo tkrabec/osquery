@@ -8,9 +8,15 @@
  *  You may select, at your option, one of the above-listed licenses.
  */
 
+// clang-format off
+// Keep it on top of all other includes to fix double include WinSock.h header file
+// which is windows specific boost build problem
+#include <boost/asio.hpp>
+#include <osquery/remote/http_client.h>
+// clang-format on
+
 #include <osquery/logger.h>
 
-#include "osquery/remote/http_client.h"
 
 namespace osquery {
 namespace http {

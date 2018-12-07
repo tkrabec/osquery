@@ -13,15 +13,16 @@
 
 #include <thread>
 
+#include <osquery/config/tests/test_utils.h>
 #include <osquery/core.h>
 #include <osquery/database.h>
 #include <osquery/flags.h>
+#include <osquery/process/process.h>
+#include <osquery/remote/tests/test_utils.h>
 #include <osquery/sql.h>
+#include <osquery/tests/test_util.h>
 #include <osquery/utils/json.h>
-
-#include "osquery/core/process.h"
-#include "osquery/tests/test_additional_util.h"
-#include "osquery/tests/test_util.h"
+#include <osquery/utils/system/time.h>
 
 namespace fs = boost::filesystem;
 
@@ -40,10 +41,10 @@ void TLSServerRunner::start() {
   }
 
   // Pick a port in an ephemeral range at random.
-  self.port_ = std::to_string(rand() % 10000 + 20000);
+  self.port_ = std::to_string(getUnixTime() % 10000 + 20000);
 
   // Fork then exec a shell.
-  auto python_server = (fs::path(kTestDataPath) / "test_http_server.py")
+  auto python_server = (getTestConfigDirectory() / "test_http_server.py")
                            .make_preferred()
                            .string() +
                        " --tls " + self.port_;
@@ -82,13 +83,13 @@ void TLSServerRunner::setClientConfig() {
 
   self.tls_server_certs_ = Flag::getValue("tls_server_certs");
   Flag::updateValue("tls_server_certs",
-                    (fs::path(kTestDataPath) / "test_server_ca.pem")
+                    (getTestConfigDirectory() / "test_server_ca.pem")
                         .make_preferred()
                         .string());
 
   self.enroll_secret_path_ = Flag::getValue("enroll_secret_path");
   Flag::updateValue("enroll_secret_path",
-                    (fs::path(kTestDataPath) / "test_enroll_secret.txt")
+                    (getTestConfigDirectory() / "test_enroll_secret.txt")
                         .make_preferred()
                         .string());
 }

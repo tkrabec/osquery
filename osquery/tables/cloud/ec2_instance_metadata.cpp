@@ -8,6 +8,12 @@
  *  You may select, at your option, one of the above-listed licenses.
  */
 
+// clang-format off
+// Keep it on top of all other includes to fix double include WinSock.h header file
+// which is windows specific boost build problem
+#include <osquery/remote/http_client.h>
+// clang-format on
+
 #include <string>
 
 #include <boost/algorithm/string.hpp>
@@ -15,7 +21,6 @@
 #include <boost/property_tree/json_parser.hpp>
 
 #include <osquery/logger.h>
-#include <osquery/remote/http_client.h>
 #include <osquery/tables.h>
 #include <osquery/utils/aws/aws_util.h>
 

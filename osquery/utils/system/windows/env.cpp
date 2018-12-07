@@ -11,10 +11,11 @@
 #include <osquery/utils/system/env.h>
 
 #include <string>
+#include <vector>
+
 #include <boost/optional.hpp>
 
-#include <winbase.h>
-
+#include <windows.h>
 
 namespace osquery {
 

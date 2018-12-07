@@ -17,7 +17,7 @@
 #elif defined(__linux__)
 #include <sys/sysinfo.h>
 #elif defined(WIN32)
-#include <windows.h>
+#include <osquery/utils/system/system.h>
 #endif
 
 namespace osquery {

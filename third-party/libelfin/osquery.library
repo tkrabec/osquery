@@ -1,6 +1,7 @@
 library(
     name = "libelfin",
     version = "0.3",
+    build = 0,
     platforms = [
         "linux-x86_64",
     ],

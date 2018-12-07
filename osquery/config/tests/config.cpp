@@ -21,8 +21,10 @@
 #include <osquery/flags.h>
 #include <osquery/packs.h>
 #include <osquery/registry.h>
+#include <osquery/system.h>
 
 #include <osquery/utils/info/platform_type.h>
+#include <osquery/utils/json.h>
 #include <osquery/utils/system/time.h>
 
 #include <boost/filesystem/path.hpp>
@@ -55,6 +57,7 @@ extern void saveScheduleBlacklist(
 class ConfigTests : public testing::Test {
  public:
   ConfigTests() {
+    Initializer::platformSetup();
     registryAndPluginInit();
     FLAGS_disable_database = true;
     DatabasePlugin::setAllowOpen(true);

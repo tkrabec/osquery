@@ -16,8 +16,7 @@
 
 #include <osquery/core.h>
 #include <osquery/filesystem/filesystem.h>
-
-#include "osquery/core/process.h"
+#include <osquery/process/process.h>
 
 namespace osquery {
 

@@ -16,11 +16,11 @@
 #include <osquery/flags.h>
 #include <osquery/logger.h>
 #include <osquery/packs.h>
+#include <osquery/process/process.h>
 #include <osquery/registry.h>
 #include <osquery/sql.h>
 #include <osquery/system.h>
 #include <osquery/tables.h>
-#include <osquery/core/process.h>
 #include <osquery/utils/info/version.h>
 #include <osquery/utils/macros/macros.h>
 

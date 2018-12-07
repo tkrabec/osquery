@@ -8,9 +8,7 @@
  *  You may select, at your option, one of the above-listed licenses.
  */
 
-#ifdef WIN32
-#include "osquery/logger/plugins/windows_event_log.h"
-#else
+#ifndef WIN32
 #include <syslog.h>
 #endif
 
@@ -21,17 +19,17 @@
 
 #include <boost/noncopyable.hpp>
 
+#include <osquery/data_logger.h>
 #include <osquery/database.h>
 #include <osquery/events.h>
 #include <osquery/extensions.h>
 #include <osquery/filesystem/filesystem.h>
 #include <osquery/flags.h>
 #include <osquery/killswitch.h>
-#include <osquery/logger.h>
 #include <osquery/numeric_monitoring.h>
+#include <osquery/plugins/logger.h>
 #include <osquery/registry_factory.h>
 #include <osquery/system.h>
-#include <osquery/plugins/logger.h>
 
 #include <osquery/flagalias.h>
 #include <osquery/utils/conversions/split.h>

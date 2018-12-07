@@ -8,10 +8,10 @@
  *  You may select, at your option, one of the above-listed licenses.
  */
 
-#include <osquery/core/process.h>
-#include <osquery/core/windows/process_ops.h>
-#include <osquery/logger.h>
 #include <osquery/filesystem/fileops.h>
+#include <osquery/logger.h>
+#include <osquery/process/process.h>
+#include <osquery/process/windows/process_ops.h>
 
 #include <AclAPI.h>
 #include <LM.h>
@@ -23,6 +23,7 @@
 
 #include <memory>
 #include <regex>
+#include <set>
 #include <vector>
 
 #include <boost/filesystem.hpp>

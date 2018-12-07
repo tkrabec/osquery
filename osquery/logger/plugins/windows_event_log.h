@@ -10,7 +10,7 @@
 
 // clang-format off
 
-#include <windows.h>
+#include <osquery/utils/system/system.h>
 #include <evntprov.h>
 // clang-format on
 

@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "buffered.h"
+#include "osquery/logger/plugins/buffered.h"
 
 #include <osquery/dispatcher.h>
 #include <osquery/plugins/logger.h>

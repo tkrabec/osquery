@@ -1,4 +1,12 @@
-load("//tools/build_defs/oss/osquery:cxx.bzl", "osquery_cxx_library", "osquery_cxx_test")
+#  Copyright (c) 2014-present, Facebook, Inc.
+#  All rights reserved.
+#
+#  This source code is licensed under both the Apache 2.0 license (found in the
+#  LICENSE file in the root directory of this source tree) and the GPLv2 (found
+#  in the COPYING file in the root directory of this source tree).
+#  You may select, at your option, one of the above-listed licenses.
+
+load("//tools/build_defs/oss/osquery:cxx.bzl", "osquery_cxx_library")
 load("//tools/build_defs/oss/osquery:native.bzl", "osquery_target")
 load("//tools/build_defs/oss/osquery:platforms.bzl", "FREEBSD", "LINUX", "POSIX", "WINDOWS")
 load("//tools/build_defs/oss/osquery:third_party.bzl", "osquery_tp_target")
@@ -15,8 +23,17 @@ osquery_cxx_library(
     ],
     header_namespace = "osquery/core",
     exported_headers = [
-        "process.h",
         "watcher.h",
+    ],
+    exported_platform_headers = [
+        (
+            WINDOWS,
+            [
+                "windows/handle.h",
+                "windows/ntapi.h",
+                "windows/wmi.h",
+            ],
+        ),
     ],
     exported_post_platform_linker_flags = [
         (
@@ -36,24 +53,11 @@ osquery_cxx_library(
             ],
         ),
     ],
-    platform_headers = [
-        (
-            WINDOWS,
-            [
-                "windows/handle.h",
-                "windows/ntapi.h",
-                "windows/process_ops.h",
-                "windows/wmi.h",
-            ],
-        ),
-    ],
     platform_srcs = [
         (
             POSIX,
             [
                 "posix/initializer.cpp",
-                "posix/process.cpp",
-                "posix/process_ops.cpp",
             ],
         ),
         (
@@ -61,11 +65,16 @@ osquery_cxx_library(
             [
                 "windows/handle.cpp",
                 "windows/initializer.cpp",
-                "windows/process.cpp",
-                "windows/process_ops.cpp",
                 "windows/wmi.cpp",
             ],
         ),
+    ],
+    tests = [
+        osquery_target("osquery/core/tests:flags_tests"),
+        osquery_target("osquery/core/tests:system_tests"),
+        osquery_target("osquery/core/tests:tables_tests"),
+        osquery_target("osquery/core/tests:watcher_permissions_tests"),
+        osquery_target("osquery/core/tests:query_tests"),
     ],
     visibility = ["PUBLIC"],
     deps = [
@@ -74,48 +83,18 @@ osquery_cxx_library(
         osquery_target("osquery/core/plugins:plugins"),
         osquery_target("osquery/core/sql:sql"),
         osquery_target("osquery/filesystem:filesystem"),
+        osquery_target("osquery/process:process"),
         osquery_target("osquery/utils:utils"),
         osquery_target("osquery/utils/conversions:conversions"),
         osquery_target("osquery/utils/info:info"),
         osquery_target("osquery/utils/system:env"),
         osquery_target("osquery/utils/system:system"),
         osquery_target("osquery/utils/system:time"),
+        osquery_target("osquery/logger:logger"),
         osquery_tp_target("gflags"),
         osquery_tp_target("glog"),
-        osquery_tp_target("gtest"),
+        osquery_tp_target("googletest", "gtest"),
+        osquery_tp_target("googletest", "gmock"),
         osquery_tp_target("openssl", "crypto"),
-    ],
-)
-
-osquery_cxx_test(
-    name = "tests",
-    srcs = [
-        "tests/flags_tests.cpp",
-        "tests/system_test.cpp",
-        "tests/tables_tests.cpp",
-    ],
-    platform_srcs = [
-        (
-            POSIX,
-            [
-                "tests/posix/permissions_tests.cpp",
-            ],
-        ),
-    ],
-    visibility = ["PUBLIC"],
-    deps = [
-        osquery_target("osquery/config/tests:test_utils"),
-        osquery_target("osquery/config/plugins:tls_config"),
-        osquery_target("osquery/core:core"),
-        osquery_target("osquery/core/sql:sql"),
-        osquery_target("osquery/utils/info:info"),
-        osquery_target("osquery/dispatcher:dispatcher"),
-        osquery_target("osquery/distributed:distributed"),
-        osquery_target("osquery/events:events"),
-        osquery_target("osquery/extensions:extensions"),
-        osquery_target("osquery/registry:registry"),
-        osquery_target("osquery/remote/enroll:tls_enroll"),
-        osquery_target("tests:helper"),
-        osquery_target("specs:tables"),
     ],
 )

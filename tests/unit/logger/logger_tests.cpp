@@ -12,13 +12,18 @@
 
 #include <gtest/gtest.h>
 
-#include <osquery/core.h>
+#include <osquery/data_logger.h>
+#include <osquery/database.h>
 #include <osquery/filesystem/filesystem.h>
-#include <osquery/logger.h>
+#include <osquery/plugins/logger.h>
 #include <osquery/registry_factory.h>
+#include <osquery/system.h>
+#include <osquery/utils/info/platform_type.h>
+#include <osquery/utils/system/time.h>
 
 namespace osquery {
 
+DECLARE_bool(disable_database);
 DECLARE_int32(logger_min_status);
 DECLARE_int32(logger_min_stderr);
 DECLARE_bool(logger_secondary_status_only);
@@ -30,8 +35,13 @@ DECLARE_bool(disable_logging);
 class LoggerTests : public testing::Test {
  public:
   void SetUp() override {
+    Initializer::platformSetup();
+    registryAndPluginInit();
+    FLAGS_disable_database = true;
+    DatabasePlugin::setAllowOpen(true);
+    DatabasePlugin::initPlugin();
+
     // Backup the logging status, then disable.
-    logging_status_ = FLAGS_disable_logging;
     FLAGS_disable_logging = false;
     FLAGS_logger_status_sync = true;
 
@@ -43,8 +53,6 @@ class LoggerTests : public testing::Test {
   }
 
   void TearDown() override {
-    FLAGS_disable_logging = logging_status_;
-    FLAGS_logger_status_sync = false;
   }
 
   // Track lines emitted to logString
@@ -60,10 +68,6 @@ class LoggerTests : public testing::Test {
   // Count added and removed snapshot rows
   static size_t snapshot_rows_added;
   static size_t snapshot_rows_removed;
-
- private:
-  /// Save the status of logging before running tests, restore afterward.
-  bool logging_status_{true};
 };
 
 std::vector<std::string> LoggerTests::log_lines;

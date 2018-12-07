@@ -8,6 +8,13 @@
  *  You may select, at your option, one of the above-listed licenses.
  */
 
+// clang-format off
+// Keep it on top of all other includes to fix double include WinSock.h header file
+// which is windows specific boost build problem
+#include <osquery/remote/http_client.h>
+#include <osquery/remote/transports/tls.h>
+// clang-format on
+
 #include <fstream>
 #include <mutex>
 #include <sstream>
@@ -32,8 +39,6 @@
 #include <osquery/utils/json.h>
 #include <osquery/utils/system/time.h>
 #include <osquery/utils/aws/aws_util.h>
-#include <osquery/remote/http_client.h>
-#include <osquery/remote/transports/tls.h>
 
 namespace pt = boost::property_tree;
 

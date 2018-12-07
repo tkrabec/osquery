@@ -18,17 +18,29 @@
 #include <gtest/gtest.h>
 
 #include <osquery/core.h>
+#include <osquery/database.h>
+#include <osquery/flags.h>
 #include <osquery/logger.h>
+#include <osquery/registry_interface.h>
+#include <osquery/system.h>
 
 #include "osquery/logger/plugins/aws_log_forwarder.h"
-#include "osquery/tests/test_util.h"
+#include "osquery/logger/plugins/buffered.h"
 
 using namespace testing;
 
 namespace osquery {
+DECLARE_bool(disable_database);
+
 class AwsLoggerTests : public testing::Test {
- public:
-  void SetUp() override {}
+ protected:
+  void SetUp() {
+    Initializer::platformSetup();
+    registryAndPluginInit();
+    FLAGS_disable_database = true;
+    DatabasePlugin::setAllowOpen(true);
+    DatabasePlugin::initPlugin();
+  }
 };
 
 class DummyOutcome final : public Aws::Kinesis::Model::PutRecordsOutcome {

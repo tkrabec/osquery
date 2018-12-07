@@ -17,9 +17,11 @@
 
 #include <boost/filesystem.hpp>
 
-#include <osquery/core/process.h>
 #include <osquery/filesystem/filesystem.h>
+
+#include <osquery/flags.h>
 #include <osquery/logger.h>
+#include <osquery/process/process.h>
 #include <osquery/system.h>
 
 #include <osquery/utils/info/platform_type.h>
@@ -221,7 +223,13 @@ TEST_F(FilesystemTests, test_canonicalization) {
       (fs::path(fake_directory_) / "deep1/../deep1/..")
           .make_preferred()
           .string();
-  std::string simple_path = fake_directory_.make_preferred().string() + "/";
+  std::string simple_path = fake_directory_.make_preferred().string();
+
+  if (isPlatform(PlatformType::TYPE_WINDOWS)) {
+    simple_path += "\\";
+  } else {
+    simple_path += "/";
+  }
 
   // Use the inline wildcard and canonicalization replacement.
   // The 'simple_path' path contains a trailing '/', the replacement method will

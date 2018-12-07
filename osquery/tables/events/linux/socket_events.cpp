@@ -14,6 +14,7 @@
 
 #include <osquery/events/linux/auditeventpublisher.h>
 #include <osquery/events/linux/socket_events.h>
+#include <osquery/flags.h>
 #include <osquery/logger.h>
 #include <osquery/registry_factory.h>
 #include <osquery/tables/events/linux/socket_events.h>

@@ -12,6 +12,7 @@
 #include <osquery/database.h>
 #include <osquery/flags.h>
 #include <osquery/registry.h>
+#include <osquery/system.h>
 
 #include <osquery/utils/json.h>
 
@@ -28,6 +29,7 @@ DECLARE_bool(disable_database);
 class DatabaseTests : public testing::Test {
  public:
   void SetUp() override {
+    Initializer::platformSetup();
     registryAndPluginInit();
 
     // Force registry to use ephemeral database plugin

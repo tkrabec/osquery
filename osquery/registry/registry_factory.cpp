@@ -14,9 +14,9 @@
 #include <cstdlib>
 #include <sstream>
 
-#include <osquery/core/process.h>
 #include <osquery/extensions.h>
 #include <osquery/logger.h>
+#include <osquery/process/process.h>
 #include <osquery/registry.h>
 #include <osquery/utils/conversions/split.h>
 #include <osquery/utils/json.h>

@@ -18,20 +18,7 @@
 #include <boost/noncopyable.hpp>
 #include <boost/optional.hpp>
 
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif
-
-#ifdef WIN32
-
-#include <windows.h>
-
-// Suppressing unexpected token following preprocessor directive warning
-#pragma warning(push, 3)
-#pragma warning(disable : 4067)
-#include <sddl.h>
-#pragma warning(pop)
-#endif
+#include <osquery/utils/system/system.h>
 
 #include <osquery/core.h>
 #include <osquery/system.h>

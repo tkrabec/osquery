@@ -1,7 +1,15 @@
+#  Copyright (c) 2014-present, Facebook, Inc.
+#  All rights reserved.
+#
+#  This source code is licensed under both the Apache 2.0 license (found in the
+#  LICENSE file in the root directory of this source tree) and the GPLv2 (found
+#  in the COPYING file in the root directory of this source tree).
+#  You may select, at your option, one of the above-listed licenses.
+
 load("//tools/build_defs/oss/osquery:cxx.bzl", "osquery_cxx_library")
 load("//tools/build_defs/oss/osquery:native.bzl", "osquery_target")
+load("//tools/build_defs/oss/osquery:platforms.bzl", "FREEBSD", "LINUX", "MACOSX")
 load("//tools/build_defs/oss/osquery:third_party.bzl", "osquery_tp_target")
-load("//tools/build_defs/oss/osquery:platforms.bzl", "FREEBSD", "LINUX", "MACOSX", "WINDOWS")
 
 osquery_cxx_library(
     name = "yara",
@@ -35,12 +43,9 @@ osquery_cxx_library(
                 "yara_events.cpp",
             ],
         ),
-        (
-            WINDOWS,
-            [
-                "yara_events.cpp",
-            ],
-        ),
+    ],
+    tests = [
+        osquery_target("osquery/tables/yara/tests:yara_tests"),
     ],
     visibility = ["PUBLIC"],
     deps = [

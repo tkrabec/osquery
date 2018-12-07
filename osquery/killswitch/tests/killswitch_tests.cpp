@@ -15,6 +15,7 @@
 #include <osquery/killswitch.h>
 #include <osquery/killswitch/killswitch_plugin.h>
 #include <osquery/registry.h>
+#include <osquery/system.h>
 
 namespace osquery {
 
@@ -23,6 +24,7 @@ DECLARE_uint32(killswitch_refresh_rate);
 class KillswitchTests : public testing::Test {
 public:
   void SetUp() override {
+    Initializer::platformSetup();
     registryAndPluginInit();
   }
 };

@@ -12,12 +12,20 @@
 
 #include <osquery/logger.h>
 
-#include "osquery/core/base64.h"
-#include "osquery/tables/system/darwin/keychain.h"
-#include "osquery/tests/test_util.h"
+#include <osquery/config/tests/test_utils.h>
+#include <osquery/filesystem/filesystem.h>
+#include <osquery/tables/system/darwin/keychain.h>
+#include <osquery/utils/base64.h>
 
 namespace osquery {
 namespace tables {
+
+// generate content for a PEM-encoded certificate
+static std::string getCACertificateContent() {
+  std::string content;
+  readFile(getTestConfigDirectory() / "test_cert.pem", content);
+  return content;
+}
 
 class CACertsTests : public ::testing::Test {
  protected:

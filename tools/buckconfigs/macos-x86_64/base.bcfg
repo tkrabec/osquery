@@ -1,9 +1,9 @@
-<file:../base.bcfg>
-
 [cxx]
-  default_platform=macosx-x86_64
+  default_platform = macosx-x86_64
 
 [cxx_base]
+  cppflags =
+
   cflags = \
     -std=gnu11 \
     -Qunused-arguments \
@@ -44,8 +44,7 @@
     -pedantic \
     -g
 
-  cppflags = \
-    -std=gnu11
+  cxxppflags =
 
   cxxflags = \
     -std=gnu++14 \
@@ -89,11 +88,7 @@
     -fobjc-arc \
     -g
 
-  cxxppflags = \
-    -std=gnu++14
-
   ldflags = \
-    -lz \
     -liconv \
     -llzma \
     -lbz2 \

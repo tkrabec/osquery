@@ -11,9 +11,10 @@
 #include <gtest/gtest.h>
 #include <gflags/gflags.h>
 
-#include <osquery/tables.h>
 #include <osquery/database.h>
 #include <osquery/registry.h>
+#include <osquery/system.h>
+#include <osquery/tables.h>
 
 namespace osquery {
 
@@ -22,6 +23,7 @@ DECLARE_bool(disable_database);
 class TablesTests : public testing::Test {
 protected:
  void SetUp() {
+   Initializer::platformSetup();
    registryAndPluginInit();
    FLAGS_disable_database = true;
    DatabasePlugin::setAllowOpen(true);

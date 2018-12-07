@@ -13,8 +13,9 @@
 #include <sqlite3.h>
 
 #include <osquery/database.h>
-#include <osquery/registry_factory.h>
 #include <osquery/filesystem/fileops.h>
+#include <osquery/flags.h>
+#include <osquery/registry_factory.h>
 
 namespace osquery {
 

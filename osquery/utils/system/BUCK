@@ -1,3 +1,11 @@
+#  Copyright (c) 2014-present, Facebook, Inc.
+#  All rights reserved.
+#
+#  This source code is licensed under both the Apache 2.0 license (found in the
+#  LICENSE file in the root directory of this source tree) and the GPLv2 (found
+#  in the COPYING file in the root directory of this source tree).
+#  You may select, at your option, one of the above-listed licenses.
+
 load("//tools/build_defs/oss/osquery:cxx.bzl", "osquery_cxx_library", "osquery_cxx_test")
 load("//tools/build_defs/oss/osquery:native.bzl", "osquery_target")
 load("//tools/build_defs/oss/osquery:platforms.bzl", "LINUX", "POSIX", "WINDOWS")
@@ -98,6 +106,9 @@ osquery_cxx_library(
 
 osquery_cxx_test(
     name = "cpu_tests",
+    srcs = [
+        "tests/cpu.cpp",
+    ],
     platform_srcs = [
         (
             LINUX,
@@ -176,7 +187,7 @@ osquery_cxx_library(
     deps = [
         osquery_target("osquery/utils/info:info"),
         osquery_tp_target("boost"),
-        osquery_tp_target("gtest"),
+        osquery_tp_target("googletest", "gtest"),
     ],
 )
 
@@ -201,4 +212,7 @@ osquery_cxx_library(
         "uptime.h",
     ],
     visibility = ["PUBLIC"],
+    deps = [
+        ":system",
+    ],
 )
