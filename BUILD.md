@@ -89,6 +89,11 @@ appropriately:
 ```
 buck build @mode/<platform>/release osquery:osqueryd
 ```
+If you get an error similar to this
+```
+Overridden cxx:cc path not found: C:\tools\toolchains\vs2017_15.5\BuildTools\VC\Tools\MSVC\14.12.25827\bin\HostX64\x64\cl.exe
+```
+edit your config \osquery\tools\buckconfigs\windows-x86_64\toolchain\vs2017_15.5.bcfg
 
 When buck finishes find the binary at `buck-out/<mode>/gen/osquery/osqueryd`.
 
